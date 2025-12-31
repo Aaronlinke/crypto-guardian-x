@@ -6,6 +6,7 @@ import { ProtectionStats } from "@/components/ProtectionStats";
 import { SystemConsole } from "@/components/SystemConsole";
 import { VulnerableWalletsList } from "@/components/VulnerableWalletsList";
 import { NetworkVisualization } from "@/components/NetworkVisualization";
+import { AddressLookup } from "@/components/AddressLookup";
 
 const Index = () => {
   return (
@@ -20,6 +21,11 @@ const Index = () => {
       <main className="container mx-auto px-4 py-6">
         {/* Hero Section */}
         <HeroSection />
+
+        {/* Address Lookup - Full Width */}
+        <div className="mb-6">
+          <AddressLookup />
+        </div>
 
         {/* Dashboard Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
