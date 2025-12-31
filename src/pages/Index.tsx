@@ -1,12 +1,12 @@
 import { TerminalHeader } from "@/components/TerminalHeader";
 import { HeroSection } from "@/components/HeroSection";
-import { ThreatPredictionPanel } from "@/components/ThreatPredictionPanel";
-import { BlockchainScanner } from "@/components/BlockchainScanner";
-import { ProtectionStats } from "@/components/ProtectionStats";
-import { SystemConsole } from "@/components/SystemConsole";
-import { VulnerableWalletsList } from "@/components/VulnerableWalletsList";
-import { NetworkVisualization } from "@/components/NetworkVisualization";
 import { AddressLookup } from "@/components/AddressLookup";
+import { MathFormulaPanel } from "@/components/MathFormulaPanel";
+import { SATSolverVisualizer } from "@/components/SATSolverVisualizer";
+import { ECDSACalculator } from "@/components/ECDSACalculator";
+import { DynamicSystemVisualizer } from "@/components/DynamicSystemVisualizer";
+import { UlamSpiralVisualizer } from "@/components/UlamSpiralVisualizer";
+import { SystemConsole } from "@/components/SystemConsole";
 
 const Index = () => {
   return (
@@ -22,29 +22,29 @@ const Index = () => {
         {/* Hero Section */}
         <HeroSection />
 
-        {/* Address Lookup - Full Width */}
+        {/* Bitcoin Address Lookup - Echte API */}
         <div className="mb-6">
           <AddressLookup />
         </div>
 
-        {/* Dashboard Grid */}
+        {/* Wissenschaftliche Tools Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
           {/* Left Column */}
-          <div className="lg:col-span-1 space-y-4">
-            <ThreatPredictionPanel />
-            <ProtectionStats />
-          </div>
-
-          {/* Center Column */}
-          <div className="lg:col-span-1 space-y-4">
-            <BlockchainScanner />
+          <div className="space-y-4">
+            <MathFormulaPanel />
             <SystemConsole />
           </div>
 
+          {/* Center Column */}
+          <div className="space-y-4">
+            <SATSolverVisualizer />
+            <ECDSACalculator />
+          </div>
+
           {/* Right Column */}
-          <div className="lg:col-span-1 space-y-4">
-            <NetworkVisualization />
-            <VulnerableWalletsList />
+          <div className="space-y-4">
+            <DynamicSystemVisualizer />
+            <UlamSpiralVisualizer />
           </div>
         </div>
 
@@ -52,16 +52,15 @@ const Index = () => {
         <footer className="border-t border-border pt-4 pb-8">
           <div className="flex flex-col md:flex-row items-center justify-between text-xs text-muted-foreground">
             <div className="flex items-center gap-2 mb-2 md:mb-0">
-              <span>© 2024 CryptoGuardian X</span>
+              <span>Wissenschaftliches Forschungsprojekt</span>
               <span className="text-border">|</span>
-              <span>Predictive Immune System v2.0</span>
+              <span>Kryptographie · SAT-Logik · Dynamische Systeme</span>
             </div>
             <div className="flex items-center gap-4">
               <span className="flex items-center gap-1">
                 <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                All Systems Operational
+                Alle Berechnungen lokal
               </span>
-              <span>Uptime: 99.97%</span>
             </div>
           </div>
         </footer>
