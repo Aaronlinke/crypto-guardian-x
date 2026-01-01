@@ -1,9 +1,12 @@
-import { useState, useCallback } from "react";
-import { Play, Pause, RotateCcw, CheckCircle, XCircle, ChevronRight } from "lucide-react";
+import { useState, useCallback, useEffect, useRef } from "react";
+import { Play, Pause, RotateCcw, CheckCircle, ChevronRight, Download, Settings } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Input } from "@/components/ui/input";
+import { factorize, generateMultiplicationCNF } from "@/lib/crypto-math";
+import { useToast } from "@/hooks/use-toast";
 
 interface Variable {
   name: string;
@@ -17,68 +20,122 @@ interface PropagationStep {
   reason: string;
 }
 
-// N=15 Faktorisierung: p*q = 15, p=3 (0011), q=5 (0101)
-const initialVariables: Variable[] = [
-  { name: "p0", value: null, forced: false },
-  { name: "p1", value: null, forced: false },
-  { name: "p2", value: null, forced: false },
-  { name: "p3", value: null, forced: false },
-  { name: "q0", value: null, forced: false },
-  { name: "q1", value: null, forced: false },
-  { name: "q2", value: null, forced: false },
-  { name: "q3", value: null, forced: false },
-];
-
-// Vorgabe: N = 15 = 1111 binär
-const targetBits = [true, true, true, true]; // N0, N1, N2, N3
-
 export function SATSolverVisualizer() {
-  const [variables, setVariables] = useState<Variable[]>(initialVariables);
+  const [targetN, setTargetN] = useState(15);
+  const [bits, setBits] = useState(4);
+  const [variables, setVariables] = useState<Variable[]>([]);
   const [steps, setSteps] = useState<PropagationStep[]>([]);
   const [currentStep, setCurrentStep] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [isSolved, setIsSolved] = useState(false);
+  const [solutions, setSolutions] = useState<{ p: number; q: number; steps: string[] }[]>([]);
+  const [propagationSequence, setPropagationSequence] = useState<PropagationStep[]>([]);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const { toast } = useToast();
 
-  const propagationSequence: PropagationStep[] = [
-    { variable: "p0", value: true, reason: "N0=1 → p0∧q0=1 → p0=1" },
-    { variable: "q0", value: true, reason: "N0=1 → p0∧q0=1 → q0=1" },
-    { variable: "p1", value: true, reason: "N1=1, XOR-Constraint → p1=1" },
-    { variable: "q1", value: false, reason: "Konsistenz mit N2, N3 → q1=0" },
-    { variable: "p2", value: false, reason: "3-Bit XOR für N2=1 → p2=0" },
-    { variable: "q2", value: true, reason: "XOR-Logik erzwingt q2=1" },
-    { variable: "p3", value: false, reason: "4-Bit XOR für N3=1 → p3=0" },
-    { variable: "q3", value: false, reason: "Höchste Bits müssen 0 sein → q3=0" },
-  ];
-
-  const runStep = useCallback(() => {
-    if (currentStep >= propagationSequence.length) {
-      setIsRunning(false);
-      setIsSolved(true);
-      return;
+  // Initialisiere Variablen basierend auf Bit-Anzahl
+  const initializeVariables = useCallback((numBits: number) => {
+    const vars: Variable[] = [];
+    for (let i = 0; i < numBits; i++) {
+      vars.push({ name: `p${i}`, value: null, forced: false });
     }
+    for (let i = 0; i < numBits; i++) {
+      vars.push({ name: `q${i}`, value: null, forced: false });
+    }
+    return vars;
+  }, []);
 
-    const step = propagationSequence[currentStep];
+  // Berechne Bit-Anzahl für N
+  const calculateBits = (n: number) => Math.max(4, Math.ceil(Math.log2(n + 1)));
+
+  // Finde Faktoren und generiere Propagationssequenz
+  const findFactorsAndGenerateSequence = useCallback((n: number) => {
+    const numBits = calculateBits(n);
+    setBits(numBits);
     
-    setVariables(prev => prev.map(v => 
-      v.name === step.variable 
-        ? { ...v, value: step.value, forced: true }
-        : v
-    ));
+    const factors = factorize(n);
+    setSolutions(factors);
     
-    setSteps(prev => [...prev, step]);
-    setCurrentStep(prev => prev + 1);
-  }, [currentStep]);
+    if (factors.length === 0) {
+      toast({ title: "Keine Faktoren", description: `${n} ist prim oder 1` });
+      return [];
+    }
+    
+    // Nimm erste Lösung für Animation
+    const { p, q } = factors[0];
+    const pBits = p.toString(2).padStart(numBits, "0").split("").reverse();
+    const qBits = q.toString(2).padStart(numBits, "0").split("").reverse();
+    
+    const sequence: PropagationStep[] = [];
+    
+    // Generiere Propagationsschritte
+    for (let i = 0; i < numBits; i++) {
+      const pVal = pBits[i] === "1";
+      sequence.push({
+        variable: `p${i}`,
+        value: pVal,
+        reason: i === 0 
+          ? `N₀=${(n & 1)} → p₀∧q₀ Constraint` 
+          : `Bit ${i}: XOR-Propagation`
+      });
+    }
+    
+    for (let i = 0; i < numBits; i++) {
+      const qVal = qBits[i] === "1";
+      sequence.push({
+        variable: `q${i}`,
+        value: qVal,
+        reason: i === 0 
+          ? `N₀=${(n & 1)} → q₀ Constraint` 
+          : `Bit ${i}: Konsistenz mit p`
+      });
+    }
+    
+    return sequence;
+  }, [toast]);
+
+  // Initialisierung
+  useEffect(() => {
+    setVariables(initializeVariables(bits));
+    const seq = findFactorsAndGenerateSequence(targetN);
+    setPropagationSequence(seq);
+  }, []);
+
+  // Neues N setzen
+  const handleSetN = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    
+    const numBits = calculateBits(targetN);
+    setBits(numBits);
+    setVariables(initializeVariables(numBits));
+    setSteps([]);
+    setCurrentStep(0);
+    setIsRunning(false);
+    setIsSolved(false);
+    
+    const seq = findFactorsAndGenerateSequence(targetN);
+    setPropagationSequence(seq);
+  };
 
   const startSolver = () => {
     if (isSolved) {
-      reset();
+      handleSetN();
       return;
     }
+    
+    if (propagationSequence.length === 0) {
+      toast({ title: "Keine Lösung", description: "Keine Propagationssequenz verfügbar" });
+      return;
+    }
+    
     setIsRunning(true);
-    const interval = setInterval(() => {
+    
+    intervalRef.current = setInterval(() => {
       setCurrentStep(prev => {
         if (prev >= propagationSequence.length) {
-          clearInterval(interval);
+          if (intervalRef.current) clearInterval(intervalRef.current);
           setIsRunning(false);
           setIsSolved(true);
           return prev;
@@ -94,25 +151,62 @@ export function SATSolverVisualizer() {
         
         return prev + 1;
       });
-    }, 800);
+    }, 400);
   };
 
   const reset = () => {
-    setVariables(initialVariables);
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    setVariables(initializeVariables(bits));
     setSteps([]);
     setCurrentStep(0);
     setIsRunning(false);
     setIsSolved(false);
   };
 
+  // Cleanup
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
+
   // Berechne p und q aus Variablen
-  const pValue = variables
-    .filter(v => v.name.startsWith("p"))
-    .reduce((acc, v, i) => acc + (v.value ? Math.pow(2, i) : 0), 0);
+  const pVars = variables.filter(v => v.name.startsWith("p"));
+  const qVars = variables.filter(v => v.name.startsWith("q"));
   
-  const qValue = variables
-    .filter(v => v.name.startsWith("q"))
-    .reduce((acc, v, i) => acc + (v.value ? Math.pow(2, i) : 0), 0);
+  const pValue = pVars.reduce((acc, v, i) => acc + (v.value ? Math.pow(2, i) : 0), 0);
+  const qValue = qVars.reduce((acc, v, i) => acc + (v.value ? Math.pow(2, i) : 0), 0);
+
+  // CNF Info
+  const cnfInfo = generateMultiplicationCNF(bits);
+
+  // Export
+  const exportData = () => {
+    const data = {
+      problem: {
+        N: targetN,
+        bits,
+        binary: targetN.toString(2)
+      },
+      solutions,
+      cnf: cnfInfo,
+      propagationLog: steps,
+      result: isSolved ? { p: pValue, q: qValue, product: pValue * qValue } : null
+    };
+    
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `sat-factorization-${targetN}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast({ title: "Exportiert", description: "SAT-Solver Daten" });
+  };
 
   return (
     <Card className="border-border/50 bg-card/80 backdrop-blur-sm">
@@ -122,7 +216,7 @@ export function SATSolverVisualizer() {
             <span className="text-[8px] text-primary">∧</span>
           </div>
           <span className="text-primary">[</span>
-          SAT-SOLVER · DPLL + UNIT PROPAGATION
+          SAT-SOLVER · DPLL
           <span className="text-primary">]</span>
           {isSolved && (
             <Badge className="ml-auto bg-green-500/20 text-green-400 border-green-500/30">
@@ -132,24 +226,62 @@ export function SATSolverVisualizer() {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
+        {/* Input */}
+        <div className="flex gap-2">
+          <div className="flex-1">
+            <label className="text-[10px] text-muted-foreground">N (zu faktorisieren)</label>
+            <Input
+              type="number"
+              value={targetN}
+              onChange={(e) => setTargetN(Math.max(2, parseInt(e.target.value) || 2))}
+              className="h-8 text-xs font-mono"
+              min={2}
+              max={65535}
+            />
+          </div>
+          <div className="flex items-end">
+            <Button size="sm" variant="outline" onClick={handleSetN} className="h-8">
+              <Settings className="w-3 h-3 mr-1" />
+              Setzen
+            </Button>
+          </div>
+        </div>
+
         {/* Problem Description */}
         <div className="p-2 rounded bg-background/50 border border-border/30 text-xs">
           <div className="text-muted-foreground mb-1">Faktorisierung: N = p × q</div>
           <div className="font-mono text-primary">
-            N = 15 = <span className="text-secondary">1111₂</span> → Finde p, q ∈ {"{2...7}"}
+            N = {targetN} = <span className="text-secondary">{targetN.toString(2)}₂</span>
+            <span className="text-muted-foreground ml-2">({bits} Bit)</span>
           </div>
         </div>
+
+        {/* Alle gefundenen Lösungen */}
+        {solutions.length > 0 && (
+          <div className="p-2 rounded bg-muted/20 border border-border/20">
+            <div className="text-[10px] text-muted-foreground mb-1">
+              Gefundene Faktorpaare: {solutions.length}
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {solutions.map((sol, i) => (
+                <Badge key={i} variant="outline" className="text-[10px] font-mono">
+                  {sol.p} × {sol.q}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Variable Grid */}
         <div className="grid grid-cols-2 gap-3">
           {/* P Variables */}
           <div className="p-2 rounded bg-background/30 border border-border/20">
-            <div className="text-[10px] text-muted-foreground mb-2">Faktor p (4-Bit)</div>
-            <div className="flex gap-1">
-              {variables.filter(v => v.name.startsWith("p")).reverse().map((v, i) => (
+            <div className="text-[10px] text-muted-foreground mb-2">Faktor p ({bits}-Bit)</div>
+            <div className="flex gap-1 flex-wrap">
+              {pVars.slice().reverse().map((v) => (
                 <div
                   key={v.name}
-                  className={`w-8 h-8 rounded border flex items-center justify-center text-xs font-mono transition-all ${
+                  className={`w-7 h-7 rounded border flex items-center justify-center text-xs font-mono transition-all ${
                     v.value === null
                       ? "border-border/50 bg-muted/30 text-muted-foreground"
                       : v.value
@@ -162,18 +294,18 @@ export function SATSolverVisualizer() {
               ))}
             </div>
             <div className="text-center text-xs mt-1 font-mono">
-              p = <span className="text-primary">{pValue || "?"}</span>
+              p = <span className="text-primary">{pVars.some(v => v.value !== null) ? pValue : "?"}</span>
             </div>
           </div>
 
           {/* Q Variables */}
           <div className="p-2 rounded bg-background/30 border border-border/20">
-            <div className="text-[10px] text-muted-foreground mb-2">Faktor q (4-Bit)</div>
-            <div className="flex gap-1">
-              {variables.filter(v => v.name.startsWith("q")).reverse().map((v, i) => (
+            <div className="text-[10px] text-muted-foreground mb-2">Faktor q ({bits}-Bit)</div>
+            <div className="flex gap-1 flex-wrap">
+              {qVars.slice().reverse().map((v) => (
                 <div
                   key={v.name}
-                  className={`w-8 h-8 rounded border flex items-center justify-center text-xs font-mono transition-all ${
+                  className={`w-7 h-7 rounded border flex items-center justify-center text-xs font-mono transition-all ${
                     v.value === null
                       ? "border-border/50 bg-muted/30 text-muted-foreground"
                       : v.value
@@ -186,7 +318,7 @@ export function SATSolverVisualizer() {
               ))}
             </div>
             <div className="text-center text-xs mt-1 font-mono">
-              q = <span className="text-secondary">{qValue || "?"}</span>
+              q = <span className="text-secondary">{qVars.some(v => v.value !== null) ? qValue : "?"}</span>
             </div>
           </div>
         </div>
@@ -209,7 +341,7 @@ export function SATSolverVisualizer() {
         <div>
           <div className="text-[10px] text-muted-foreground mb-1 flex items-center gap-1">
             <ChevronRight className="w-3 h-3" />
-            UNIT PROPAGATION LOG
+            UNIT PROPAGATION LOG ({steps.length}/{propagationSequence.length})
           </div>
           <ScrollArea className="h-24 rounded bg-background/50 border border-border/30 p-2">
             {steps.length === 0 ? (
@@ -238,7 +370,7 @@ export function SATSolverVisualizer() {
           <Button
             size="sm"
             onClick={startSolver}
-            disabled={isRunning}
+            disabled={isRunning || propagationSequence.length === 0}
             className="flex-1 gap-1"
           >
             {isSolved ? (
@@ -260,6 +392,9 @@ export function SATSolverVisualizer() {
           </Button>
           <Button size="sm" variant="outline" onClick={reset} disabled={isRunning}>
             <RotateCcw className="w-3 h-3" />
+          </Button>
+          <Button size="sm" variant="outline" onClick={exportData}>
+            <Download className="w-3 h-3" />
           </Button>
         </div>
       </CardContent>
