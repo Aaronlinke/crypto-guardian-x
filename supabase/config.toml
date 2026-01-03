@@ -1,0 +1,4 @@
+project_id = "kgefrdmafriznyphrpce"
+
+[functions.research-ai]
+verify_jwt = false
