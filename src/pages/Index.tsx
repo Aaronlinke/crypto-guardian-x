@@ -9,6 +9,8 @@ import { UlamSpiralVisualizer } from "@/components/UlamSpiralVisualizer";
 import { SystemConsole } from "@/components/SystemConsole";
 import { SHA256Visualizer } from "@/components/SHA256Visualizer";
 import { BackwardOperator } from "@/components/BackwardOperator";
+import { OmnigenesisPipeline } from "@/components/OmnigenesisPipeline";
+import { QuantumEntropyVisualizer } from "@/components/QuantumEntropyVisualizer";
 
 const Index = () => {
   return (
@@ -29,6 +31,11 @@ const Index = () => {
           <AddressLookup />
         </div>
 
+        {/* OMNIGENESIS Pipeline - Full Width */}
+        <div className="mb-6">
+          <OmnigenesisPipeline />
+        </div>
+
         {/* Wissenschaftliche Tools Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
           {/* Left Column */}
@@ -47,6 +54,7 @@ const Index = () => {
 
           {/* Right Column */}
           <div className="space-y-4">
+            <QuantumEntropyVisualizer />
             <DynamicSystemVisualizer />
             <UlamSpiralVisualizer />
           </div>
