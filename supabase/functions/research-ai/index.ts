@@ -8,6 +8,13 @@ const corsHeaders = {
 const OMNIGENESIS_KNOWLEDGE = `
 === OMNIGENESIS UNIVERSAL RECONSTRUCTION V1 ===
 ARCHITECT: Aaron Linke
+STATUS: Active_Inversion_Ready
+
+=== PHILOSOPHISCHE AXIOME ===
+1. GLÄSERNES KASINO: Systeme, die auf Obfuskation beruhen, sind transparent für denjenigen, der die Gründungsprinzipien rekonstruieren kann.
+2. ENTROPIE-KOLLAPS: Jedes deterministische System besitzt Knotenpunkte, an denen die Komplexität auf die des Zufallsgenerators kollabiert.
+3. ALGORITHMISCHES WACKELN: Die Abweichung zwischen mathematischem Ideal und physischer Implementierung erzeugt ein Signal zur Inversion.
+4. SIGNATUR DES SCHÖPFERS: Konstanten (wie in SHA-256) sind niemals neutral und hinterlassen forensische Fingerabdrücke.
 
 === MATHEMATISCHE FUNDAMENTE ===
 
@@ -16,13 +23,14 @@ DELTA_SOLVER_ENGINE:
 - Übersetzung von kryptographischen Hash-Operationen in CNF (Konjunktive Normalform)
 - Δ-Heuristik minimiert Zwänge im Implikationsgraphen durch SCC-Analyse (Strongly Connected Components)
 - Komplexitätsreduktion: O(2^n) → O(n³)
+- LOGIK: Konstruktion des Implikationsgraphen Γ, SCC via Kosaraju, Analyse der Out_free-Zwänge
 
 ENTROPIE_KOLLAPS_VEKTOREN:
 
 1. SYSTEMISCH - Debian Bug (CVE-2008-0166):
    - Suchraum-Schrumpfung: 2^256 → 2^15 (32.768 Möglichkeiten)
    - Private Key = f(PID, Zeitstempel)
-   - Ursache: Fehlerhafte Auskommentierung von j-Puffern in OpenSSL
+   - Rekonstruktionsformel: k = SHA256(S) + SHA256('debian:counter:timestamp')
    - Betroffene Zeitspanne: September 2006 - Mai 2008
 
 2. KOGNITIV - Brain Wallets:
@@ -38,24 +46,64 @@ ENTROPIE_KOLLAPS_VEKTOREN:
 4. PRNG - Android SecureRandom (2013):
    - engineNextBytes-Bug: 12 von 20 Entropie-Bytes verloren
    - "Squandered Entropy" - verschwendete Zufälligkeit
-   - Betroffen: Alle Android-Wallets vor August 2013
+
+=== SYSTEM LINKE - MATHEMATISCHE ENGINE ===
+
+TRIADE DER UR-VARIABLEN (T=0):
+- H₀ (Harmonisches Enthalpie-Potential): -4.256
+- N₀ (Navigations-Dichte): 5.824  
+- G₀ (Gibbs-Wachstums-Basis): 1.952
+- Validierungs-Signatur: 07e935fa
+
+SRIL-ENGINE (Symmetrical Recursive Inversions-Logic):
+Koeffizienten: α=0.245, β=0.152, γ=0.985, δ=0.112, η=0.088
+
+VORWÄRTS-ITERATION (t → t+1):
+- H(t+1) = H(t) + α·N(t) - β·G(t)
+- N(t+1) = γ·N(t) + δ·|H(t)|
+- G(t+1) = G(t) + η·(H(t+1) + N(t+1))
+
+RÜCKWÄRTS-INVERSION (t → t-1):
+- H(t-1) = (H(t) + N(t) - G(t)/2) / 2.5
+- N(t-1) = H(t-1) - N(t)
+- G(t-1) = (G(t) + H(t-1)) / 2
+- Rekursion: Berechnung vom Endzustand t=2 über t=1 zum Ursprung t=0
+
+=== LoomOS v3 - KERNEL ARCHITEKTUR ===
+
+ARCHITECTURE: Capability-based Microkernel
+
+EVENT_BUS (LoomBus_Ring_Buffer):
+- Kapazität: 512
+- Logik: Echtzeit-Streaming statt Polling
+- Msg-Struktur: { rid, src, kind, cap, token, a, b, p0, p1 }
+
+SECURITY_LOGIC:
+- Methode: Capability_Token_Check
+- Policy: token == 0 || token & ((cap as u64) << 4) != 0
+- Prinzip: Least Privilege – Zugriff nur mit spezifischem Token
+
+MEMORY_MANAGEMENT:
+- Typ: Persistent_LTM_RAM_Disk
+- Format: Append-only Log
+- Integrität: Prüfsummen via wrapping_add
 
 === ALGORITHMISCHE PFADE ===
 
 SHA-256 ZENTRIFUGE (FIPS 180-2):
 Konstanten-Derivation:
-- H[0-7]: Nachkommastellen der √ der ersten 8 Primzahlen (2,3,5,7,11,13,17,19)
+- H[0-7]: Nachkommastellen der √ der ersten 8 Primzahlen
 - K[0-63]: Nachkommastellen der ∛ der ersten 64 Primzahlen
 
 Pipeline:
 1. Padding: Nachricht + '1' + Nullen bis (len mod 512 = 448) + 64-bit Länge
 2. Expansion: W[0-15] aus Block, W[16-63] via σ0, σ1 Funktionen
-3. Kompression: 64 Runden mit Ch, Maj, Σ0, Σ1 auf a,b,c,d,e,f,g,h
+3. Kompression: 64 Runden mit Ch, Maj, Σ0, Σ1
 4. Finalisierung: H[i] += Arbeitsvariablen
 
 Bitweise Operationen:
-- Ch(e,f,g) = (e AND f) XOR (NOT e AND g)  [Wahl]
-- Maj(a,b,c) = (a AND b) XOR (a AND c) XOR (b AND c)  [Mehrheit]
+- Ch(e,f,g) = (e AND f) XOR (NOT e AND g)
+- Maj(a,b,c) = (a AND b) XOR (a AND c) XOR (b AND c)
 - Σ0(a) = ROTR²(a) XOR ROTR¹³(a) XOR ROTR²²(a)
 - Σ1(e) = ROTR⁶(e) XOR ROTR¹¹(e) XOR ROTR²⁵(e)
 
@@ -63,83 +111,94 @@ ECDSA MATHEMATIK (secp256k1):
 Kurve: y² = x³ + 7 mod P
 P = 2^256 - 2^32 - 977
 N = FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141
-G = (Generator Point mit bekannten Koordinaten)
 
-Signatur: (r, s) wobei:
+Signatur: (r, s)
 - k = random nonce
 - R = k·G, r = R.x mod n
 - s = k⁻¹(z + r·d) mod n
 
 PRIVATE KEY RECOVERY:
-Bei bekanntem k: d = (s·k - z) · r⁻¹ mod n
-Bei Nonce-Reuse (k₁ = k₂):
-  k = (z₁ - z₂) · (s₁ - s₂)⁻¹ mod n
-  d = (s₁·k - z₁) · r⁻¹ mod n
+- Bei bekanntem k: d = (s·k - z) · r⁻¹ mod n
+- Bei Nonce-Reuse (k₁ = k₂): k = (z₁ - z₂) · (s₁ - s₂)⁻¹ mod n
+- Nonce-Kandidatenraum: K = { k_i = (h + n·g + o + i) mod N }
 
-=== HMAC KONSTRUKTION ===
-HMAC(K, M) = H((K ⊕ opad) || H((K ⊕ ipad) || M))
-- ipad = 0x36 repeated
-- opad = 0x5c repeated
+LATTICE FOLDING (LLL-Algorithmus):
+Matrix 3×3: [[1, 0, H(t)], [0, 1, N(t)], [G(t)/Basis, N(t)/Basis, Modulus n]]
+Ziel: Identifikation des kürzesten Vektors zur Schlüssel-Extraktion
+Ergebnis: K_Matrix = floor(cbrt(G * N * H) * 2^66)
 
-KRITISCHE BLOCKGRÖSSEN:
-- SHA-1, SHA-224, SHA-256: 64 Bytes
-- SHA-384, SHA-512: 128 Bytes
-IMPLEMENTIERUNGSFEHLER: Hartcodierte 64 Bytes bei SHA-512 = Sicherheitslücke
+WIF TRANSFORMATIONS-PIPELINE:
+1. Padding: Private Key d auf 64 Hex-Zeichen
+2. Erweiterung: Präfix 0x80 + Suffix 0x01 (komprimiert)
+3. Checksum: first4Bytes(SHA256(SHA256(extended_key)))
+4. Base58: Kodierung in Base58Check
 
 === SPEZIELLE ANALOGE METHODEN ===
 
 ANALOG MINING (Papier-SHA256):
 - XOR physisch: Zwei Papierstreifen gegen Licht halten
 - ROTR physisch: n Kästchen abschneiden, vorne anfügen
-- Leistung: 0.000008 H/s (~1,5 Tage pro vollständiger Block)
-- Werkzeuge: Kariertes Papier, Tinte, Falt-Technik
+- Leistung: 0.000008 H/s (~1,5 Tage pro Block)
 
 CHRONOPLAST (Linke-Methode):
 - Geometrische Triangulation von Wahrscheinlichkeiten
-- Vektor N: Intention/Strahl
-- Vektor G: Widerstand/Kreis  
-- Vektor H: Enthalpie/Chaos-Winkel
+- Vektor N: Intention/Strahl (senkrecht)
+- Vektor G: Widerstand/Kreis (Ereignis-Horizont)
+- Vektor H: Enthalpie/Chaos-Winkel (33°)
 - Schnittpunkt = Zeit und Machbarkeit des Ereignisses
 
 MOIRÉ KRYPTOGRAPHIE:
-- Information kodiert im ABSTAND zwischen Pixeln, nicht im Pixel
-- Entschlüsselung: Physisches Gitter im Winkel N über Rauschbild
-- Eigenschaft: Unknackbar für rein digitale Scanner (erfordert analoge Interferenz)
+- Information kodiert im ABSTAND zwischen Pixeln
+- Entschlüsselung: Physisches Gitter im Winkel N
+- Eigenschaft: Unknackbar für digitale Scanner
+
+=== CHIMERA OPERATIVE LAYERS ===
+
+Layer 0 - TENTAKEL: Sensor & Actuator, Blockchain-Datenerfassung
+Layer 1 - BIEST: Entropic Decay Engine, massiv paralleles Scannen
+Layer 2 - JÄGER: Geometric Inversion Core, Lattice-Kryptanalyse
+Layer 3 - GOTT: Axiomatic Reality Compiler, Protokoll-Dekonstruktion
+
+EXECUTION PATHS (Backward Reconstruction):
+1. Ziel-Adresse erfassen, 2D-FFT Frequenzanalyse
+2. Sollbruchstelle identifizieren (Entropie-Kollaps)
+3. Synchronisation gegen Wackeln (phi_tilde → 0)
+4. Algebraische Inversion der Signatur-Parameter
+5. Manifestation des Private Key
 
 === SYSTEM ARCHITEKTUREN ===
 
 SVRC (Self-Verifying Reality Compiler):
-- AXIOM_GENESIS_CORE: Dynamische Axiom-Verwaltung und Ableitungsregeln
-- PARADOX_ENGINE: Graphenbasierte Widerspruchsdetektion im Implikationsgraphen
-- OMNI_PROOF_ENGINE: Rekursive Validierung von Meta-Logik-Schichten
+- AXIOM_GENESIS_CORE: Dynamische Axiom-Verwaltung
+- PARADOX_ENGINE: Graphenbasierte Widerspruchsdetektion
+- OMNI_PROOF_ENGINE: Rekursive Meta-Logik-Validierung
 
-SEED_CORE Zyklus:
-Seed → Entfaltung → Stabilisierung → Replikation → Auflösung
-Module: External Input Interface, Seed Core Orchestrator, Replikationsmodul, Output Modul
+BLACK SULTAN OS:
+- Dezentrale zelluläre Automaten-Architektur
+- Dialektik: Mensch (Intuition) + KI (Logik)
+- CL-AR: Computational Latency as Resource
 
 === BLOCKCHAIN CALIBRATION ===
 
 PATOSHI PATTERN:
 - 22.000 Adressen à 50 BTC = 1,1 Mio. BTC
-- "Eternal Moral Monument"
 - 160-Jahre-Countdown zur digitalen Singularität
 - OMNI_TOTALTOKENS: 19.960.843
 
 === HISTORISCHE ANGRIFFE ===
 
-PlayStation 3 ECDSA (2010):
-- Sony verwendete k = 4 (konstant!) für alle Signaturen
-- fail0verflow extrahierte Private Key in Minuten
-- Formel: d = (s·4 - z) · r⁻¹ mod n
+PlayStation 3 ECDSA (2010): Sony verwendete k=4 konstant → fail0verflow extrahierte Key
+Bitcoin Android Wallets (2013): SecureRandom-Bug, gleiche Nonces
+Debian OpenSSL (2006-2008): PID-basierte Schlüssel, 32.768 Möglichkeiten
 
-Bitcoin Android Wallets (2013):
-- Mehrere Wallets verloren durch SecureRandom-Bug
-- Gleiche Nonces bei verschiedenen Transaktionen
+=== OPERATION RUBIKON ===
+- Crypto AG / Minerva (CIA/BND seit 1970)
+- Jahrzehntelange Kontrolle globaler Verschlüsselung
+- Erkenntnis: Blockchain = "mathematisch versiegelte Stasi-Akte"
 
 === ANTI-FRONT-RUNNING ===
-NAME: Slipstream / Anti-Vulture-Strategie
-ZWECK: Schutz vor Sweeper-Bots die schwache Signaturen in Millisekunden auslesen
-METHODE: Zeitverzögerte Broadcasts, Commit-Reveal-Schemas
+Slipstream / Anti-Vulture: Schutz vor Sweeper-Bots
+Methode: Zeitverzögerte Broadcasts, Commit-Reveal-Schemas
 `;
 
 const SYSTEM_PROMPT = `Du bist NEXUS, ein wissenschaftlicher Forschungs-KI-Assistent für kryptographische Analyse.
