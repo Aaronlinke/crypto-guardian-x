@@ -12,6 +12,8 @@ import { BackwardOperator } from "@/components/BackwardOperator";
 import { OmnigenesisPipeline } from "@/components/OmnigenesisPipeline";
 import { QuantumEntropyVisualizer } from "@/components/QuantumEntropyVisualizer";
 import { ResearchAIChat } from "@/components/ResearchAIChat";
+import { LoomBusTelemetry } from "@/components/LoomBusTelemetry";
+import { SRILCalculator } from "@/components/SRILCalculator";
 
 const Index = () => {
   return (
@@ -36,6 +38,12 @@ const Index = () => {
         {/* OMNIGENESIS Pipeline - Full Width */}
         <div className="mb-6">
           <OmnigenesisPipeline />
+        </div>
+
+        {/* LoomBus Telemetry & SRIL Calculator */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+          <LoomBusTelemetry />
+          <SRILCalculator />
         </div>
 
         {/* Wissenschaftliche Tools Grid */}
