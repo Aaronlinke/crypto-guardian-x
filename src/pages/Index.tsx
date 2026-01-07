@@ -16,6 +16,9 @@ import { LoomBusTelemetry } from "@/components/LoomBusTelemetry";
 import { SRILCalculator } from "@/components/SRILCalculator";
 import { ChronoplastVisualizer } from "@/components/ChronoplastVisualizer";
 import { BitcoinFixpointSync } from "@/components/BitcoinFixpointSync";
+import { EllipticCurveVisualizer } from "@/components/EllipticCurveVisualizer";
+import { LLLLatticeVisualizer } from "@/components/LLLLatticeVisualizer";
+import { EntropyComparator } from "@/components/EntropyComparator";
 
 const Index = () => {
   return (
@@ -58,24 +61,31 @@ const Index = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
           {/* Left Column */}
           <div className="space-y-4">
+            <EllipticCurveVisualizer />
             <MathFormulaPanel />
             <SHA256Visualizer />
-            <SystemConsole />
           </div>
 
           {/* Center Column */}
           <div className="space-y-4">
+            <LLLLatticeVisualizer />
             <SATSolverVisualizer />
             <ECDSACalculator />
-            <BackwardOperator />
           </div>
 
           {/* Right Column */}
           <div className="space-y-4">
+            <EntropyComparator />
             <QuantumEntropyVisualizer />
-            <DynamicSystemVisualizer />
-            <UlamSpiralVisualizer />
+            <BackwardOperator />
           </div>
+        </div>
+
+        {/* Additional Tools */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+          <DynamicSystemVisualizer />
+          <UlamSpiralVisualizer />
+          <SystemConsole />
         </div>
 
         {/* Footer mit Credits */}
