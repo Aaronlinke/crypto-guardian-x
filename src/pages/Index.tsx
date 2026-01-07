@@ -14,6 +14,8 @@ import { QuantumEntropyVisualizer } from "@/components/QuantumEntropyVisualizer"
 import { ResearchAIChat } from "@/components/ResearchAIChat";
 import { LoomBusTelemetry } from "@/components/LoomBusTelemetry";
 import { SRILCalculator } from "@/components/SRILCalculator";
+import { ChronoplastVisualizer } from "@/components/ChronoplastVisualizer";
+import { BitcoinFixpointSync } from "@/components/BitcoinFixpointSync";
 
 const Index = () => {
   return (
@@ -44,6 +46,12 @@ const Index = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
           <LoomBusTelemetry />
           <SRILCalculator />
+        </div>
+
+        {/* Chronoplast & Bitcoin Fixpunkt */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+          <ChronoplastVisualizer />
+          <BitcoinFixpointSync />
         </div>
 
         {/* Wissenschaftliche Tools Grid */}
