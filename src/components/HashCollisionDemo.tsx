@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from "react";
-import { ShieldCheck, Play, Pause, RotateCcw, AlertTriangle, Zap, Clock } from "lucide-react";
+import { useState, useEffect, useRef, useMemo } from "react";
+import { ShieldCheck, Play, Pause, RotateCcw, AlertTriangle, Zap } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +9,6 @@ import { Slider } from "@/components/ui/slider";
 interface HashAttempt {
   input: string;
   hash: string;
-  timestamp: number;
 }
 
 // Simples Hash für Demo (nicht kryptographisch!)
@@ -20,18 +19,9 @@ function simpleHash(input: string, bits: number): string {
     hash = ((hash << 5) - hash) + char;
     hash = hash & hash;
   }
-  // Reduziere auf gewünschte Bits
   const maxVal = Math.pow(2, bits);
   hash = Math.abs(hash) % maxVal;
   return hash.toString(16).padStart(Math.ceil(bits / 4), '0');
-}
-
-// SHA-256 (echtes kryptographisches Hashing)
-async function sha256Hex(input: string): Promise<string> {
-  const msgBuffer = new TextEncoder().encode(input);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
 export function HashCollisionDemo() {
@@ -45,17 +35,9 @@ export function HashCollisionDemo() {
   const [elapsedTime, setElapsedTime] = useState(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   
-  // Theoretische Kollisionswahrscheinlichkeit (Birthday Problem)
   const expectedAttempts = useMemo(() => {
-    // Für n Bits: ~1.177 * sqrt(2^n)
     return Math.floor(1.177 * Math.sqrt(Math.pow(2, hashBits)));
   }, [hashBits]);
-  
-  // SHA-256 Vergleich
-  const sha256ExpectedAttempts = useMemo(() => {
-    // 2^128 für SHA-256 (256/2 bits für Birthday Attack)
-    return Math.pow(2, 128);
-  }, []);
   
   const generateRandomInput = (): string => {
     const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
@@ -76,9 +58,7 @@ export function HashCollisionDemo() {
     for (let i = 0; i < batchSize; i++) {
       const input = generateRandomInput();
       const hash = simpleHash(input, hashBits);
-      const timestamp = Date.now();
       
-      // Check for collision
       if (newHashMap.has(hash)) {
         const existingInput = newHashMap.get(hash)!;
         if (existingInput !== input) {
@@ -90,7 +70,7 @@ export function HashCollisionDemo() {
         newHashMap.set(hash, input);
       }
       
-      newAttempts.push({ input, hash, timestamp });
+      newAttempts.push({ input, hash });
     }
     
     setHashMap(newHashMap);
@@ -98,7 +78,6 @@ export function HashCollisionDemo() {
     setTotalAttempts(prev => prev + batchSize);
   };
   
-  // Timer
   useEffect(() => {
     if (isRunning && startTime) {
       const timerInterval = setInterval(() => {
@@ -108,7 +87,6 @@ export function HashCollisionDemo() {
     }
   }, [isRunning, startTime]);
   
-  // Main search loop
   useEffect(() => {
     if (isRunning) {
       intervalRef.current = setInterval(runCollisionSearch, 50);
@@ -140,11 +118,7 @@ export function HashCollisionDemo() {
   
   const progress = Math.min(100, (totalAttempts / expectedAttempts) * 100);
   
-  // Format large numbers
   const formatNumber = (n: number): string => {
-    if (n >= 1e78) return `~10⁷⁸`;
-    if (n >= 1e38) return `~2¹²⁸`;
-    if (n >= 1e15) return n.toExponential(2);
     if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
     if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
     return n.toString();
@@ -153,9 +127,6 @@ export function HashCollisionDemo() {
   const formatTime = (ms: number): string => {
     const seconds = Math.floor(ms / 1000);
     const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    
-    if (hours > 0) return `${hours}h ${minutes % 60}m ${seconds % 60}s`;
     if (minutes > 0) return `${minutes}m ${seconds % 60}s`;
     return `${seconds}.${Math.floor((ms % 1000) / 100)}s`;
   };
@@ -166,7 +137,7 @@ export function HashCollisionDemo() {
         <CardTitle className="text-sm font-mono flex items-center gap-2">
           <ShieldCheck className="w-4 h-4 text-green-500" />
           <span className="text-primary">[</span>
-          HASH-KOLLISIONS-DEMONSTRATOR
+          HASH-KOLLISIONS-DEMO
           <span className="text-primary">]</span>
           <Badge variant="outline" className="ml-auto text-[10px] bg-green-500/10 text-green-400 border-green-500/30">
             Birthday Attack
@@ -174,7 +145,6 @@ export function HashCollisionDemo() {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Hash Bits Slider */}
         <div className="space-y-2">
           <div className="flex justify-between text-[10px] text-muted-foreground">
             <span>Hash-Größe: {hashBits} Bits</span>
@@ -195,10 +165,9 @@ export function HashCollisionDemo() {
           />
         </div>
         
-        {/* Expected vs Actual */}
         <div className="grid grid-cols-2 gap-2">
           <div className="p-2 rounded bg-amber-500/10 border border-amber-500/20">
-            <div className="text-[9px] text-amber-400">Erwartete Versuche (Birthday)</div>
+            <div className="text-[9px] text-amber-400">Erwartete Versuche</div>
             <div className="font-mono text-sm text-amber-300">~{formatNumber(expectedAttempts)}</div>
             <div className="text-[8px] text-muted-foreground">≈ 1.177 × √(2^{hashBits})</div>
           </div>
@@ -209,21 +178,19 @@ export function HashCollisionDemo() {
           </div>
         </div>
         
-        {/* Progress */}
         <div className="space-y-1">
           <div className="flex justify-between text-[10px] text-muted-foreground">
-            <span>Fortschritt zur erwarteten Kollision</span>
+            <span>Fortschritt</span>
             <span>{progress.toFixed(1)}%</span>
           </div>
           <Progress value={progress} className="h-2" />
         </div>
         
-        {/* Controls */}
         <div className="flex gap-2">
           {!isRunning ? (
             <Button size="sm" className="flex-1 gap-2" onClick={start} disabled={collisionFound !== null}>
               <Play className="w-3 h-3" />
-              {collisionFound ? "Kollision gefunden!" : "Start Suche"}
+              {collisionFound ? "Kollision gefunden!" : "Start"}
             </Button>
           ) : (
             <Button size="sm" className="flex-1 gap-2" variant="secondary" onClick={pause}>
@@ -236,7 +203,6 @@ export function HashCollisionDemo() {
           </Button>
         </div>
         
-        {/* Collision Found */}
         {collisionFound && (
           <div className="p-3 rounded bg-red-500/10 border border-red-500/30 space-y-2">
             <div className="flex items-center gap-2 text-red-400 font-medium text-sm">
@@ -258,16 +224,15 @@ export function HashCollisionDemo() {
               </div>
             </div>
             <div className="text-[10px] text-muted-foreground">
-              Gefunden nach {formatNumber(totalAttempts)} Versuchen in {formatTime(elapsedTime)}
+              Nach {formatNumber(totalAttempts)} Versuchen in {formatTime(elapsedTime)}
             </div>
           </div>
         )}
         
-        {/* Recent Attempts */}
         {attempts.length > 0 && !collisionFound && (
           <div className="space-y-1">
             <div className="text-[10px] text-muted-foreground">Letzte Versuche:</div>
-            <div className="max-h-32 overflow-y-auto space-y-0.5 font-mono text-[10px]">
+            <div className="max-h-24 overflow-y-auto space-y-0.5 font-mono text-[10px]">
               {attempts.map((attempt, idx) => (
                 <div key={idx} className="flex justify-between text-muted-foreground">
                   <span>{attempt.input}</span>
@@ -278,7 +243,6 @@ export function HashCollisionDemo() {
           </div>
         )}
         
-        {/* SHA-256 Comparison */}
         <div className="p-3 rounded bg-green-500/10 border border-green-500/20 space-y-2">
           <div className="flex items-center gap-2 text-green-400 font-medium text-xs">
             <ShieldCheck className="w-4 h-4" />
@@ -290,49 +254,30 @@ export function HashCollisionDemo() {
               <span className="text-green-300 font-mono">256 Bits</span>
             </div>
             <div className="flex justify-between">
-              <span>Birthday Attack Versuche:</span>
-              <span className="text-green-300 font-mono">~2¹²⁸ ≈ 10³⁸</span>
+              <span>Birthday Attack:</span>
+              <span className="text-green-300 font-mono">~2¹²⁸ ≈ 10³⁸ Versuche</span>
             </div>
             <div className="flex justify-between">
               <span>Bei 1 Billion/s:</span>
               <span className="text-green-300 font-mono">~10¹⁹ Jahre</span>
             </div>
           </div>
-          <div className="text-[9px] text-green-400/70 mt-2">
-            Das ist länger als das Alter des Universums (13.8 × 10⁹ Jahre) × 10⁹!
+          <div className="text-[9px] text-green-400/70">
+            Länger als das Alter des Universums × 10⁹!
           </div>
         </div>
         
-        {/* Math Explanation */}
-        <div className="p-2 rounded bg-muted/20 border border-border/20 space-y-2">
+        <div className="p-2 rounded bg-muted/20 border border-border/20 space-y-1">
           <div className="text-[10px] font-medium text-muted-foreground">Birthday Paradox:</div>
           <div className="font-mono text-[9px] text-primary">
             P(Kollision) ≈ 1 - e^(-n²/2H)
           </div>
-          <div className="text-[9px] text-muted-foreground">
-            Bei n Versuchen und H möglichen Hashwerten. 50% Wahrscheinlichkeit bei n ≈ 1.177 × √H
-          </div>
-          <div className="mt-2 p-2 bg-amber-500/10 rounded border border-amber-500/20">
-            <div className="flex items-center gap-1 text-amber-400 text-[9px]">
-              <AlertTriangle className="w-3 h-3" />
-              <span>Demo verwendet vereinfachtes Hashing!</span>
-            </div>
-            <div className="text-[8px] text-muted-foreground mt-1">
-              SHA-256 ist in der Praxis kollisionsresistent.
-            </div>
+          <div className="flex items-center gap-1 text-amber-400 text-[9px] mt-1">
+            <AlertTriangle className="w-3 h-3" />
+            <span>Demo verwendet vereinfachtes Hashing!</span>
           </div>
         </div>
       </CardContent>
     </Card>
   );
-}
-
-function useMemo<T>(factory: () => T, deps: React.DependencyList): T {
-  const [value, setValue] = useState<T>(factory);
-  
-  useEffect(() => {
-    setValue(factory());
-  }, deps);
-  
-  return value;
 }
