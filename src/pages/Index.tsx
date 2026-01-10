@@ -19,7 +19,8 @@ import { BitcoinFixpointSync } from "@/components/BitcoinFixpointSync";
 import { EllipticCurveVisualizer } from "@/components/EllipticCurveVisualizer";
 import { LLLLatticeVisualizer } from "@/components/LLLLatticeVisualizer";
 import { EntropyComparator } from "@/components/EntropyComparator";
-
+import { Base58CheckVisualizer } from "@/components/Base58CheckVisualizer";
+import { HashCollisionDemo } from "@/components/HashCollisionDemo";
 const Index = () => {
   return (
     <div className="min-h-screen bg-background relative">
@@ -57,6 +58,12 @@ const Index = () => {
           <BitcoinFixpointSync />
         </div>
 
+        {/* Base58Check & Hash Collision */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+          <Base58CheckVisualizer />
+          <HashCollisionDemo />
+        </div>
+
         {/* Wissenschaftliche Tools Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
           {/* Left Column */}
@@ -80,7 +87,6 @@ const Index = () => {
             <BackwardOperator />
           </div>
         </div>
-
         {/* Additional Tools */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
           <DynamicSystemVisualizer />
