@@ -37,6 +37,12 @@ export const TerminalHeader = () => {
             <StatusIndicator status="active" label="Neural Engine" />
             <StatusIndicator status="active" label="Blockchain Monitor" />
             <StatusIndicator status="active" label="Rescue Protocol" />
+            <a 
+              href="/nexus" 
+              className="flex items-center gap-1 px-2 py-1 rounded bg-primary/10 border border-primary/30 text-primary text-xs font-mono hover:bg-primary/20 transition-colors"
+            >
+              <span className="animate-pulse">◉</span> NEXUS v2
+            </a>
           </div>
 
           {/* System Info */}
