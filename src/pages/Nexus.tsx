@@ -12,12 +12,23 @@ import {
   ChevronRight, Play, Pause, RotateCcw, Download,
   Search, Scan, Database, GitBranch, Binary, 
   Fingerprint, Key, Hash, Layers, Radio, Radar,
-  TrendingDown, TrendingUp, Crosshair, Bug, Skull
+  TrendingDown, TrendingUp, Crosshair, Bug, Skull,
+  Grid3X3, Table, Shuffle, Clock, Code
 } from "lucide-react";
 import { SECP256K1, modInverse, toFullHex, recoverPrivateKey, safeBigInt } from "@/lib/crypto-math";
 
+// NEXUS v3.0 Module Imports
+import PollardsRhoVisualizer from "@/components/nexus/PollardsRhoVisualizer";
+import BSGSVisualizer from "@/components/nexus/BSGSVisualizer";
+import MersenneTwisterAnalyzer from "@/components/nexus/MersenneTwisterAnalyzer";
+import TimingAttackSimulator from "@/components/nexus/TimingAttackSimulator";
+import BitcoinScriptAnalyzer from "@/components/nexus/BitcoinScriptAnalyzer";
+import WeakKeyDatabase from "@/components/nexus/WeakKeyDatabase";
+import HNPLatticeAttack from "@/components/nexus/HNPLatticeAttack";
+import TransactionGraphExplorer from "@/components/nexus/TransactionGraphExplorer";
+
 // ═══════════════════════════════════════════════════════════════════════════════
-// NEXUS v2.0 - CRYPTOGRAPHIC INTELLIGENCE CONSOLE
+// NEXUS v3.0 - CRYPTOGRAPHIC INTELLIGENCE CONSOLE
 // ═══════════════════════════════════════════════════════════════════════════════
 // 
 // WISSENSCHAFTLICHE STUDIE - EDUCATIONAL PURPOSE ONLY
@@ -828,20 +839,46 @@ const Nexus = () => {
         </Card>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid grid-cols-4 w-full max-w-2xl">
-            <TabsTrigger value="scanner" className="font-mono text-xs">
-              <Scan className="w-4 h-4 mr-1" /> Scanner
-            </TabsTrigger>
-            <TabsTrigger value="attacks" className="font-mono text-xs">
-              <Skull className="w-4 h-4 mr-1" /> Historisch
-            </TabsTrigger>
-            <TabsTrigger value="entropy" className="font-mono text-xs">
-              <Activity className="w-4 h-4 mr-1" /> Entropie
-            </TabsTrigger>
-            <TabsTrigger value="graph" className="font-mono text-xs">
-              <Network className="w-4 h-4 mr-1" /> Graph
-            </TabsTrigger>
-          </TabsList>
+          <ScrollArea className="w-full">
+            <TabsList className="inline-flex w-auto min-w-full">
+              <TabsTrigger value="scanner" className="font-mono text-xs">
+                <Scan className="w-4 h-4 mr-1" /> Scanner
+              </TabsTrigger>
+              <TabsTrigger value="attacks" className="font-mono text-xs">
+                <Skull className="w-4 h-4 mr-1" /> Historisch
+              </TabsTrigger>
+              <TabsTrigger value="entropy" className="font-mono text-xs">
+                <Activity className="w-4 h-4 mr-1" /> Entropie
+              </TabsTrigger>
+              <TabsTrigger value="graph" className="font-mono text-xs">
+                <Network className="w-4 h-4 mr-1" /> Graph
+              </TabsTrigger>
+              <TabsTrigger value="pollard" className="font-mono text-xs">
+                <Zap className="w-4 h-4 mr-1" /> Pollard Rho
+              </TabsTrigger>
+              <TabsTrigger value="bsgs" className="font-mono text-xs">
+                <Table className="w-4 h-4 mr-1" /> BSGS
+              </TabsTrigger>
+              <TabsTrigger value="hnp" className="font-mono text-xs">
+                <Grid3X3 className="w-4 h-4 mr-1" /> HNP
+              </TabsTrigger>
+              <TabsTrigger value="mt" className="font-mono text-xs">
+                <Shuffle className="w-4 h-4 mr-1" /> MT19937
+              </TabsTrigger>
+              <TabsTrigger value="timing" className="font-mono text-xs">
+                <Clock className="w-4 h-4 mr-1" /> Timing
+              </TabsTrigger>
+              <TabsTrigger value="script" className="font-mono text-xs">
+                <Code className="w-4 h-4 mr-1" /> Script
+              </TabsTrigger>
+              <TabsTrigger value="txgraph" className="font-mono text-xs">
+                <GitBranch className="w-4 h-4 mr-1" /> TX Graph
+              </TabsTrigger>
+              <TabsTrigger value="weakkeys" className="font-mono text-xs">
+                <Database className="w-4 h-4 mr-1" /> Weak Keys
+              </TabsTrigger>
+            </TabsList>
+          </ScrollArea>
 
           {/* ═══════════════════════════════════════════════════════════════ */}
           {/* SIGNATURE SCANNER TAB */}
@@ -1441,12 +1478,22 @@ const Nexus = () => {
               </div>
             </div>
           </TabsContent>
+
+          {/* NEW NEXUS v3.0 MODULES */}
+          <TabsContent value="pollard"><PollardsRhoVisualizer onLog={addLog} /></TabsContent>
+          <TabsContent value="bsgs"><BSGSVisualizer onLog={addLog} /></TabsContent>
+          <TabsContent value="hnp"><HNPLatticeAttack onLog={addLog} /></TabsContent>
+          <TabsContent value="mt"><MersenneTwisterAnalyzer onLog={addLog} /></TabsContent>
+          <TabsContent value="timing"><TimingAttackSimulator onLog={addLog} /></TabsContent>
+          <TabsContent value="script"><BitcoinScriptAnalyzer onLog={addLog} /></TabsContent>
+          <TabsContent value="txgraph"><TransactionGraphExplorer onLog={addLog} /></TabsContent>
+          <TabsContent value="weakkeys"><WeakKeyDatabase onLog={addLog} /></TabsContent>
         </Tabs>
 
         {/* Footer */}
         <footer className="mt-8 pt-4 border-t border-border text-center text-xs text-muted-foreground">
           <p className="mb-1">
-            <span className="text-primary font-semibold">NEXUS v2.0</span> — Cryptographic Intelligence Console
+            <span className="text-primary font-semibold">NEXUS v3.0</span> — Cryptographic Intelligence Console
           </p>
           <p>WISSENSCHAFTLICHE STUDIE · Educational Purpose Only · Build {new Date().toISOString().split('T')[0]}</p>
         </footer>
