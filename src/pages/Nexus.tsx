@@ -26,6 +26,7 @@ import BitcoinScriptAnalyzer from "@/components/nexus/BitcoinScriptAnalyzer";
 import WeakKeyDatabase from "@/components/nexus/WeakKeyDatabase";
 import HNPLatticeAttack from "@/components/nexus/HNPLatticeAttack";
 import TransactionGraphExplorer from "@/components/nexus/TransactionGraphExplorer";
+import UnifiedResearchDashboard from "@/components/nexus/UnifiedResearchDashboard";
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // NEXUS v3.0 - CRYPTOGRAPHIC INTELLIGENCE CONSOLE
@@ -877,6 +878,9 @@ const Nexus = () => {
               <TabsTrigger value="weakkeys" className="font-mono text-xs">
                 <Database className="w-4 h-4 mr-1" /> Weak Keys
               </TabsTrigger>
+              <TabsTrigger value="research" className="font-mono text-xs bg-gradient-to-r from-red-500/10 to-orange-500/10">
+                <Brain className="w-4 h-4 mr-1 text-red-400" /> Master-Formeln
+              </TabsTrigger>
             </TabsList>
           </ScrollArea>
 
@@ -1488,6 +1492,12 @@ const Nexus = () => {
           <TabsContent value="script"><BitcoinScriptAnalyzer onLog={addLog} /></TabsContent>
           <TabsContent value="txgraph"><TransactionGraphExplorer onLog={addLog} /></TabsContent>
           <TabsContent value="weakkeys"><WeakKeyDatabase onLog={addLog} /></TabsContent>
+          <TabsContent value="research">
+            <UnifiedResearchDashboard 
+              onModuleNavigate={(module) => setActiveTab(module)}
+              onLogMessage={addLog}
+            />
+          </TabsContent>
         </Tabs>
 
         {/* Footer */}
