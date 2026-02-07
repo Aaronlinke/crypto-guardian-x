@@ -840,49 +840,49 @@ const Nexus = () => {
         </Card>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <ScrollArea className="w-full">
-            <TabsList className="inline-flex w-auto min-w-full">
-              <TabsTrigger value="scanner" className="font-mono text-xs">
+          <div className="w-full overflow-x-auto pb-2">
+            <TabsList className="inline-flex w-max gap-1">
+              <TabsTrigger value="scanner" className="font-mono text-xs whitespace-nowrap">
                 <Scan className="w-4 h-4 mr-1" /> Scanner
               </TabsTrigger>
-              <TabsTrigger value="attacks" className="font-mono text-xs">
+              <TabsTrigger value="attacks" className="font-mono text-xs whitespace-nowrap">
                 <Skull className="w-4 h-4 mr-1" /> Historisch
               </TabsTrigger>
-              <TabsTrigger value="entropy" className="font-mono text-xs">
+              <TabsTrigger value="entropy" className="font-mono text-xs whitespace-nowrap">
                 <Activity className="w-4 h-4 mr-1" /> Entropie
               </TabsTrigger>
-              <TabsTrigger value="graph" className="font-mono text-xs">
+              <TabsTrigger value="graph" className="font-mono text-xs whitespace-nowrap">
                 <Network className="w-4 h-4 mr-1" /> Graph
               </TabsTrigger>
-              <TabsTrigger value="pollard" className="font-mono text-xs">
+              <TabsTrigger value="pollard" className="font-mono text-xs whitespace-nowrap">
                 <Zap className="w-4 h-4 mr-1" /> Pollard Rho
               </TabsTrigger>
-              <TabsTrigger value="bsgs" className="font-mono text-xs">
+              <TabsTrigger value="bsgs" className="font-mono text-xs whitespace-nowrap">
                 <Table className="w-4 h-4 mr-1" /> BSGS
               </TabsTrigger>
-              <TabsTrigger value="hnp" className="font-mono text-xs">
+              <TabsTrigger value="hnp" className="font-mono text-xs whitespace-nowrap">
                 <Grid3X3 className="w-4 h-4 mr-1" /> HNP
               </TabsTrigger>
-              <TabsTrigger value="mt" className="font-mono text-xs">
+              <TabsTrigger value="mt" className="font-mono text-xs whitespace-nowrap">
                 <Shuffle className="w-4 h-4 mr-1" /> MT19937
               </TabsTrigger>
-              <TabsTrigger value="timing" className="font-mono text-xs">
+              <TabsTrigger value="timing" className="font-mono text-xs whitespace-nowrap">
                 <Clock className="w-4 h-4 mr-1" /> Timing
               </TabsTrigger>
-              <TabsTrigger value="script" className="font-mono text-xs">
+              <TabsTrigger value="script" className="font-mono text-xs whitespace-nowrap">
                 <Code className="w-4 h-4 mr-1" /> Script
               </TabsTrigger>
-              <TabsTrigger value="txgraph" className="font-mono text-xs">
+              <TabsTrigger value="txgraph" className="font-mono text-xs whitespace-nowrap">
                 <GitBranch className="w-4 h-4 mr-1" /> TX Graph
               </TabsTrigger>
-              <TabsTrigger value="weakkeys" className="font-mono text-xs">
+              <TabsTrigger value="weakkeys" className="font-mono text-xs whitespace-nowrap">
                 <Database className="w-4 h-4 mr-1" /> Weak Keys
               </TabsTrigger>
-              <TabsTrigger value="research" className="font-mono text-xs bg-gradient-to-r from-red-500/10 to-orange-500/10">
+              <TabsTrigger value="research" className="font-mono text-xs whitespace-nowrap bg-gradient-to-r from-red-500/10 to-orange-500/10">
                 <Brain className="w-4 h-4 mr-1 text-red-400" /> Master-Formeln
               </TabsTrigger>
             </TabsList>
-          </ScrollArea>
+          </div>
 
           {/* ═══════════════════════════════════════════════════════════════ */}
           {/* SIGNATURE SCANNER TAB */}
