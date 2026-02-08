@@ -6,16 +6,28 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Slider } from "@/components/ui/slider";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Brain, Zap, Shield, Target, Network, Eye, 
   Terminal, Cpu, Activity, Lock, Unlock, AlertTriangle,
-  ChevronRight, Play, Pause, RotateCcw, Download,
+  ChevronRight, Play, Pause, RotateCcw, Download, FileText,
   Search, Scan, Database, GitBranch, Binary, 
   Fingerprint, Key, Hash, Layers, Radio, Radar,
   TrendingDown, TrendingUp, Crosshair, Bug, Skull,
   Grid3X3, Table, Shuffle, Clock, Code
 } from "lucide-react";
 import { SECP256K1, modInverse, toFullHex, recoverPrivateKey, safeBigInt } from "@/lib/crypto-math";
+import { 
+  exportHistoricalAttacks, 
+  exportHistoricalAttacksMarkdown,
+  exportScanResults,
+  exportEntropyAnalysis,
+  exportAttackSimulation,
+  type HistoricalAttackExport,
+  type ScanResultExport,
+  type SignatureExport,
+  type EntropyBreakdownExport
+} from "@/lib/export-utils";
 
 // NEXUS v3.0 Module Imports
 import PollardsRhoVisualizer from "@/components/nexus/PollardsRhoVisualizer";
@@ -568,6 +580,7 @@ interface EntropySource {
 
 const Nexus = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('scanner');
   
   // Attack Surface State
@@ -1338,9 +1351,38 @@ const Nexus = () => {
 
               {/* Results Panel */}
               <Card className="p-4">
-                <div className="flex items-center gap-2 mb-4">
-                  <AlertTriangle className="w-5 h-5 text-destructive" />
-                  <span className="font-mono text-sm font-semibold">Scan-Ergebnisse</span>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <AlertTriangle className="w-5 h-5 text-destructive" />
+                    <span className="font-mono text-sm font-semibold">Scan-Ergebnisse</span>
+                  </div>
+                  {scanResults.length > 0 && (
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => {
+                        const sigExport: SignatureExport[] = signatures.map(s => ({
+                          id: s.id,
+                          r: s.r,
+                          s: s.s,
+                          z: s.z,
+                          timestamp: s.timestamp
+                        }));
+                        const resultExport: ScanResultExport[] = scanResults.map(r => ({
+                          type: r.type,
+                          severity: r.severity,
+                          message: r.message,
+                          formula: r.formula,
+                          recoveredKey: r.recoveredKey
+                        }));
+                        exportScanResults(resultExport, sigExport);
+                        toast({ title: "Exportiert", description: `${scanResults.length} Scan-Ergebnisse` });
+                        addLog('[EXPORT] Scan-Ergebnisse exportiert');
+                      }}
+                    >
+                      <Download className="w-4 h-4 mr-1" /> Export
+                    </Button>
+                  )}
                 </div>
 
                 <ScrollArea className="h-[400px]">
@@ -1486,16 +1528,40 @@ const Nexus = () => {
               </Card>
             </div>
 
-            {/* Filter & Search */}
+            {/* Filter & Export */}
             <Card className="p-3">
-              <div className="flex flex-wrap gap-2">
-                <Badge variant="outline" className="cursor-pointer hover:bg-primary/20 text-xs">Alle</Badge>
-                <Badge variant="outline" className="cursor-pointer hover:bg-destructive/20 text-xs border-destructive/50">Nonce Reuse</Badge>
-                <Badge variant="outline" className="cursor-pointer hover:bg-orange-500/20 text-xs border-orange-500/50">Weak PRNG</Badge>
-                <Badge variant="outline" className="cursor-pointer hover:bg-yellow-500/20 text-xs border-yellow-500/50">Side-Channel</Badge>
-                <Badge variant="outline" className="cursor-pointer hover:bg-purple-500/20 text-xs border-purple-500/50">Lattice</Badge>
-                <Badge variant="outline" className="cursor-pointer hover:bg-cyan-500/20 text-xs border-cyan-500/50">Fault Injection</Badge>
-                <Badge variant="outline" className="cursor-pointer hover:bg-pink-500/20 text-xs border-pink-500/50">Implementation</Badge>
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="outline" className="cursor-pointer hover:bg-primary/20 text-xs">Alle</Badge>
+                  <Badge variant="outline" className="cursor-pointer hover:bg-destructive/20 text-xs border-destructive/50">Nonce Reuse</Badge>
+                  <Badge variant="outline" className="cursor-pointer hover:bg-orange-500/20 text-xs border-orange-500/50">Weak PRNG</Badge>
+                  <Badge variant="outline" className="cursor-pointer hover:bg-yellow-500/20 text-xs border-yellow-500/50">Side-Channel</Badge>
+                  <Badge variant="outline" className="cursor-pointer hover:bg-purple-500/20 text-xs border-purple-500/50">Lattice</Badge>
+                </div>
+                <div className="flex gap-2">
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    onClick={() => {
+                      exportHistoricalAttacks(HISTORICAL_ATTACKS as HistoricalAttackExport[]);
+                      toast({ title: "Exportiert", description: `${HISTORICAL_ATTACKS.length} Angriffe als JSON` });
+                      addLog('[EXPORT] Historische Angriffe als JSON exportiert');
+                    }}
+                  >
+                    <Download className="w-4 h-4 mr-1" /> JSON
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    onClick={() => {
+                      exportHistoricalAttacksMarkdown(HISTORICAL_ATTACKS as HistoricalAttackExport[]);
+                      toast({ title: "Exportiert", description: `${HISTORICAL_ATTACKS.length} Angriffe als Markdown` });
+                      addLog('[EXPORT] Historische Angriffe als Markdown exportiert');
+                    }}
+                  >
+                    <FileText className="w-4 h-4 mr-1" /> Markdown
+                  </Button>
+                </div>
               </div>
             </Card>
 
@@ -1795,9 +1861,30 @@ const Nexus = () => {
               </Card>
 
               <Card className="p-4">
-                <div className="flex items-center gap-2 mb-4">
-                  <Layers className="w-5 h-5 text-primary" />
-                  <span className="font-mono text-sm font-semibold">Analyse-Breakdown</span>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <Layers className="w-5 h-5 text-primary" />
+                    <span className="font-mono text-sm font-semibold">Analyse-Breakdown</span>
+                  </div>
+                  {entropyBreakdown.length > 0 && (
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => {
+                        const breakdownExport: EntropyBreakdownExport[] = entropyBreakdown.map(b => ({
+                          name: b.name,
+                          bits: b.bits,
+                          quality: b.quality,
+                          source: b.source
+                        }));
+                        exportEntropyAnalysis(entropyInput, entropyScore, breakdownExport);
+                        toast({ title: "Exportiert", description: "Entropie-Analyse" });
+                        addLog('[EXPORT] Entropie-Analyse exportiert');
+                      }}
+                    >
+                      <Download className="w-4 h-4 mr-1" /> Export
+                    </Button>
+                  )}
                 </div>
 
                 {entropyBreakdown.length === 0 ? (
