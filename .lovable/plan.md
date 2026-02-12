@@ -1,206 +1,125 @@
 
+# Vollproduktionsfaehig: Platzhalter, Demo-Daten und Fake-Komponenten entfernen
 
-# NEXUS v3.0 - Ultimate Cryptographic Research Console
+## Problemanalyse
 
-## Ueberblick
-
-NEXUS wird von einem Analyse-Tool zu einer vollstaendigen **Cryptographic Attack Simulation Platform** erweitert. Neue Module decken ECDLP-Solver, PRNG-Analyse, Side-Channel-Simulation und Bitcoin-spezifische Angriffe ab.
+Nach umfassender Code-Analyse wurden folgende Kategorien von nicht-produktionsfaehigen Elementen identifiziert:
 
 ---
 
-## Neue Module
+## Kategorie 1: Komplett fake/simulierte Komponenten (nicht auf Index-Seite verwendet)
 
-### 1. Pollard's Rho ECDLP Solver
-**Zweck:** Visualisierung des wichtigsten Algorithmus zur Loesung des Elliptic Curve Discrete Logarithm Problems.
+Diese Komponenten existieren im Projekt, werden aber aktuell NICHT eingebunden:
 
-**Funktionen:**
-- Interaktive Visualisierung des "Random Walk" auf der Kurve
-- Collision Detection Animation (Zykluserkennung)
-- Floyd's Cycle Detection vs Brent's Algorithm Vergleich
-- Komplexitaetsanzeige: O(sqrt(n)) Operationen
-- Demo-Modus mit kleiner Kurve (Ordnung ~1000)
+- **BlockchainScanner.tsx** - Generiert zufaellige Bitcoin-Adressen und fake Scan-Ergebnisse mit Math.random()
+- **NetworkVisualization.tsx** - Statische Knotenliste mit simulierter Aktivitaet
+- **VulnerableWalletsList.tsx** - Hardcodierte Fake-Wallet-Liste (nutzt echte bekannte Adressen wie Genesis-Block mit erfundenen Balances/Status)
+- **ThreatPredictionPanel.tsx** - Fake "Quantum Threat Predictor" mit erfundenen Wahrscheinlichkeiten und veralteten Zeitraeumen (Q1-Q3 2025)
+- **ProtectionStats.tsx** - Fake Statistiken die sich zufaellig erhoehen, hardcodiertes "94.7% Protection Level"
 
-**Formel-Visualisierung:**
+**Aktion:** Diese 5 Dateien komplett entfernen, da sie nicht verwendet werden und reine Platzhalter sind.
+
+---
+
+## Kategorie 2: Inkonsistenzen in NEXUS
+
+| Problem | Datei | Details |
+|---------|-------|---------|
+| Version inkonsistent | Nexus.tsx | Header sagt "v2.0", Footer sagt "v3.0", Console-Log sagt "v2.0" |
+| Console-Log falsch | Nexus.tsx | Sagt "6 dokumentiert" obwohl 20 Angriffe existieren |
+| Canvas Title veraltet | Nexus.tsx | "NEXUS ATTACK SURFACE v2.0" im Canvas |
+| PS3 Example Data | Nexus.tsx | exampleData fuer PS3 nutzt Platzhalter-Hex-Werte (0x1234..., 0xaaaa...) statt realer historischer Daten |
+
+**Aktion:** Alle Versionsreferenzen auf "v3.0" vereinheitlichen, Console-Log korrigieren, PS3-Beispieldaten durch dokumentierte Werte ersetzen.
+
+---
+
+## Kategorie 3: Math.random() in Simulationen (AKZEPTABEL)
+
+Diese Verwendungen sind KORREKT fuer ihren Zweck - sie simulieren Prozesse und generieren KEINE kryptographischen Schluessel:
+
+- **LoomBusTelemetry.tsx** - Math.random() fuer LoomBus Message-IDs und Gate-Temperatur-Rauschen (Simulation)
+- **OmnigenesisPipeline.tsx** - Math.random() fuer initiale Entropie-Werte (Demonstration)
+- **MersenneTwisterAnalyzer.tsx** - Math.random() als Proxy fuer MT19937 (explizit als Demo gekennzeichnet)
+- **HashCollisionDemo.tsx** - Math.random() fuer Kollisions-Suche (korrekt fuer Birthday-Attack Demo)
+- **PollardsRhoVisualizer.tsx** - Math.random() fuer zufaellige Zielwerte (Demo-Kurve)
+
+**Aktion:** Belassen, aber sicherstellen dass alle mit Disclaimer gekennzeichnet sind.
+
+---
+
+## Kategorie 4: TransactionGraphExplorer - Nur Demo-Modus
+
+- Der "Analyze" Button tut nichts (keine API-Anbindung)
+- Nur "Demo Graph" Button generiert zufaellige Daten
+- Kein echter Blockstream API-Aufruf
+
+**Aktion:** Den "Analyze" Button mit der bestehenden Blockstream API verbinden (useBlockstreamAPI Hook existiert bereits) oder den Button deaktivieren mit Hinweis "Erfordert API-Erweiterung".
+
+---
+
+## Kategorie 5: HeroSection - Fake Counter
+
+- "Protection Cycles" zaehlt von 42847 aufwaerts (alle 30 Sekunden +1) - komplett bedeutungslos
+
+**Aktion:** Ersetzen durch echte Metriken (z.B. Anzahl dokumentierter Angriffe, Module-Count, oder Build-Datum) oder entfernen.
+
+---
+
+## Umsetzungsplan
+
+### Schritt 1: Ungenutzte Fake-Komponenten entfernen
+- BlockchainScanner.tsx loeschen
+- NetworkVisualization.tsx loeschen
+- VulnerableWalletsList.tsx loeschen
+- ThreatPredictionPanel.tsx loeschen
+- ProtectionStats.tsx loeschen
+
+### Schritt 2: NEXUS Version und Logs korrigieren
+- Alle "v2.0" Referenzen in Nexus.tsx auf "v3.0" aendern
+- Console-Init-Log: "6 dokumentiert" auf "20 dokumentiert" korrigieren
+- Canvas-Title aktualisieren
+
+### Schritt 3: PS3 Example Data korrigieren
+- Platzhalter-Hex (0x1234..., 0xaaaa...) durch einen Hinweis ersetzen dass echte Signaturdaten aus Sicherheitsgruenden nicht eingebettet werden, oder durch dokumentierte Referenzwerte
+
+### Schritt 4: HeroSection produktionsfaehig machen
+- Fake "Protection Cycles" Counter ersetzen durch reale Werte:
+  - "20 Dokumentierte Angriffe"
+  - "13 Analyse-Module"  
+  - Build-Datum
+
+### Schritt 5: TransactionGraphExplorer bereinigen
+- "Analyze" Button deaktivieren mit Tooltip "API-Integration geplant"
+- Alternativ: Blockstream API anbinden fuer echte TX-Daten
+
+### Schritt 6: Disclaimer-Check
+- Alle Simulationsmodule auf vorhandene Disclaimers pruefen
+- MersenneTwisterAnalyzer: "Demo verwendet Pseudo-MT19937" ist korrekt
+- PollardsRho: DEMO_CURVE Hinweis ist korrekt
+
+---
+
+## Technische Details
+
+### Zu loeschende Dateien (5):
 ```
-Walk: Xi+1 = f(Xi) wobei f partitioniert P, Q, P+Q
-Kollision: aiP + biQ = ajP + bjQ
-Loesung: x = (ai - aj)(bj - bi)^(-1) mod n
-```
-
----
-
-### 2. Baby-step Giant-step (BSGS) Visualizer
-**Zweck:** Space-Time Tradeoff Algorithmus fuer ECDLP.
-
-**Funktionen:**
-- Tabellen-Visualisierung der "Baby Steps" (jP fuer j = 0..m)
-- Animation der "Giant Steps" (Q - imP)
-- Hash-Table Lookup Animation
-- Speicher vs Zeit Tradeoff Slider
-- Vergleich mit Pollard's Rho
-
-**Mathematik:**
-```
-m = ceil(sqrt(n))
-Baby: {jP : j = 0, 1, ..., m}
-Giant: Q - imP fuer i = 0, 1, ...
-Match: x = im + j
-```
-
----
-
-### 3. Hidden Number Problem (HNP) Lattice Attack
-**Zweck:** Zeigt wie partielle Nonce-Leaks zu Key Recovery fuehren.
-
-**Funktionen:**
-- Lattice-Matrix Konstruktion aus biased Nonces
-- LLL-Reduktion Animation (nutzt existierenden LLLLatticeVisualizer)
-- Visualisierung: Wie viele Bits Leak = Break?
-- Minerva Attack Simulation
-- TPM-FAIL Szenario
-
-**Integration:** Verbindet mit dem existierenden `LLLLatticeVisualizer`
-
----
-
-### 4. Mersenne Twister State Recovery
-**Zweck:** PRNG-Analyse und Vorhersage.
-
-**Funktionen:**
-- MT19937 interne State-Visualisierung (624 x 32-bit)
-- "Untemper" Funktion Animation
-- State Recovery nach 624 Outputs
-- Vorhersage Demo (naechste N Zahlen)
-- Vergleich: Math.random() vs crypto.getRandomValues()
-
-**Lernziel:** Warum `Math.random()` NIEMALS fuer Krypto verwenden
-
----
-
-### 5. Timing Attack Simulator
-**Zweck:** Side-Channel Visualisierung.
-
-**Funktionen:**
-- Modular Exponentiation mit Timing-Unterschieden
-- Statistischer Angriff auf Square-and-Multiply
-- Timing-Histogramme
-- Cache-Timing Grundlagen (Flush+Reload Konzept)
-- Montgomery Ladder als Gegenmassnahme
-
----
-
-### 6. Bitcoin Script Analyzer
-**Zweck:** P2SH, P2WSH Script-Analyse.
-
-**Funktionen:**
-- Script Dekompilierung und Visualisierung
-- Stack-basierte Ausfuehrung Animation
-- Bekannte Script-Templates erkennen
-- Multisig (m-of-n) Analyse
-- Timelock Visualisierung (CLTV, CSV)
-
----
-
-### 7. Transaction Graph Explorer
-**Zweck:** Transaktionsfluss-Analyse.
-
-**Funktionen:**
-- Address Clustering Heuristiken
-- Common-Input-Ownership Visualisierung
-- Change Detection Algorithmen
-- Taint Analysis
-- Interaktiver Graph mit D3.js-Style Rendering
-
-**Nutzt:** Existierenden Blockstream API Hook
-
----
-
-### 8. Weak Key Pattern Database
-**Zweck:** Bekannte schwache Schluessel erkennen.
-
-**Funktionen:**
-- Debian OpenSSL Bug Keys (32.768 moegliche)
-- Brain Wallet Woerterbuch-Angriff Demo
-- Puzzle Transaction Keys (1BTC Challenges)
-- "Vanitygen" Pattern Analyse
-- Low-Entropy Seed Detection
-
----
-
-## Erweiterte Historical Attacks Database
-
-Neue dokumentierte Angriffe:
-1. **Fail0verflow PS3** (2010) - bereits vorhanden
-2. **Android SecureRandom** (2013) - bereits vorhanden
-3. **Debian OpenSSL** (2008) - bereits vorhanden
-4. **Blockchain.info** (2014) - bereits vorhanden
-5. **Minerva** (2019) - bereits vorhanden
-6. **HNP Lattice** (2020) - bereits vorhanden
-7. **NEU: BitcoinJS ECDSA** (2014) - Weitere Nonce Reuse
-8. **NEU: Randstorm** (2023) - BitcoinJS weak random
-9. **NEU: ROCA** (2017) - RSA Key Generation in TPM
-10. **NEU: Rowhammer Fault** (2015) - Hardware-based Key Recovery
-11. **NEU: Hertzbleed** (2022) - Frequency Side-Channel
-12. **NEU: LadderLeak** (2020) - Timing in Montgomery Ladder
-
----
-
-## Technische Umsetzung
-
-### Neue Dateien:
-```
-src/components/nexus/
-  PollardsRhoVisualizer.tsx
-  BSGSVisualizer.tsx
-  HNPLatticeAttack.tsx
-  MersenneTwisterAnalyzer.tsx
-  TimingAttackSimulator.tsx
-  BitcoinScriptAnalyzer.tsx
-  TransactionGraphExplorer.tsx
-  WeakKeyDatabase.tsx
+src/components/BlockchainScanner.tsx
+src/components/NetworkVisualization.tsx
+src/components/VulnerableWalletsList.tsx
+src/components/ThreatPredictionPanel.tsx
+src/components/ProtectionStats.tsx
 ```
 
-### Erweiterung von Nexus.tsx:
-- Neue Tabs fuer jedes Modul
-- Unified Console fuer alle Logs
-- Cross-Module Linking (z.B. HNP -> LLL)
-- Export-Funktion fuer Analysen
-
-### Neue lib Funktionen:
+### Zu aendernde Dateien (2):
 ```
-src/lib/crypto-advanced.ts
-  - pollardRho(curve, P, Q)
-  - babyStepGiantStep(curve, P, Q)
-  - hnpLatticeConstruct(signatures, knownBits)
-  - untemperMT(output)
-  - recoverMTState(outputs[624])
+src/pages/Nexus.tsx - Versionen, Logs, Example Data
+src/components/HeroSection.tsx - Fake Counter entfernen
 ```
 
----
+### Optional zu aendernde Dateien (1):
+```
+src/components/nexus/TransactionGraphExplorer.tsx - Analyze Button
+```
 
-## Aenderungen an existierenden Komponenten
-
-1. **LLLLatticeVisualizer**: Export der Gram-Schmidt und LLL Funktionen fuer HNP-Modul
-2. **EllipticCurveVisualizer**: Integration mit Pollard's Rho und BSGS
-3. **EntropyComparator**: Erweiterung um MT19937 Analyse
-
----
-
-## UI/UX Verbesserungen
-
-- **Dark Theme Konsistenz**: Beibehaltung der Terminal-Aesthetik
-- **Interaktive Tutorials**: Schritt-fuer-Schritt Erklaerungen
-- **Code-Export**: Python/JavaScript Code fuer jeden Algorithmus
-- **Dokumentations-Panel**: LaTeX-Formeln mit KaTeX
-- **Progress Indicators**: Fuer lang laufende Berechnungen
-
----
-
-## Wissenschaftliche Kennzeichnung
-
-Jedes Modul erhaelt:
-- Header: "WISSENSCHAFTLICHE STUDIE - EDUCATIONAL PURPOSE"
-- Referenzen zu akademischen Papern
-- "Responsible Disclosure" Hinweise
-- Ethical Guidelines sichtbar
-
+Keine neuen Abhaengigkeiten noetig. Keine Datenbank-Aenderungen.
