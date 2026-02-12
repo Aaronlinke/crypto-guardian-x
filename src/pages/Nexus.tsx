@@ -110,13 +110,13 @@ const HISTORICAL_ATTACKS: HistoricalAttack[] = [
     lesson: 'k MUSS für jede Signatur kryptographisch zufällig sein - NIEMALS wiederverwenden!',
     references: ['fail0verflow 27C3 Talk', 'Lenstra et al. 2012'],
     exampleData: {
-      r1: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
-      s1: '0xfedcba0987654321fedcba0987654321fedcba0987654321fedcba0987654321',
-      z1: '0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-      r2: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
-      s2: '0x0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef',
-      z2: '0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
-      recoveredKey: 'd = (z₁-z₂)(s₁-s₂)⁻¹r⁻¹ mod n'
+      r1: 'Identisch für beide Signaturen (da k konstant = 4)',
+      s1: 'Signatur 1 aus Firmware-Update A',
+      z1: 'Hash des ersten signierten Firmware-Images',
+      r2: 'r₂ = r₁ (beweis für identisches k)',
+      s2: 'Signatur 2 aus Firmware-Update B',
+      z2: 'Hash des zweiten signierten Firmware-Images',
+      recoveredKey: 'd = (z₁-z₂)(s₁-s₂)⁻¹r⁻¹ mod n — live auf 27C3 berechnet'
     },
     exploitComplexity: 'Trivial',
     patchStatus: 'Patched'
@@ -605,10 +605,10 @@ const Nexus = () => {
   
   // Console Logs
   const [logs, setLogs] = useState<string[]>([
-    '[NEXUS] v2.0 Cryptographic Intelligence Console',
+    '[NEXUS] v3.0 Cryptographic Intelligence Console',
     '[NEXUS] WISSENSCHAFTLICHE STUDIE - Educational Purpose',
     '[NEXUS] Attack Surface: 24 Knoten geladen',
-    '[NEXUS] Historische Angriffe: 6 dokumentiert',
+    '[NEXUS] Historische Angriffe: 20 dokumentiert',
     '[NEXUS] Bereit für Analyse...'
   ]);
 
@@ -1081,7 +1081,7 @@ const Nexus = () => {
     ctx.fillStyle = '#00ff88';
     ctx.font = 'bold 12px monospace';
     ctx.textAlign = 'left';
-    ctx.fillText('NEXUS ATTACK SURFACE v2.0', 10, 18);
+    ctx.fillText('NEXUS ATTACK SURFACE v3.0', 10, 18);
 
     ctx.fillStyle = '#666666';
     ctx.font = '10px monospace';
@@ -1135,7 +1135,7 @@ const Nexus = () => {
   const exportAnalysis = () => {
     const analysis = {
       timestamp: new Date().toISOString(),
-      system: 'NEXUS v2.0 - Cryptographic Intelligence Console',
+      system: 'NEXUS v3.0 - Cryptographic Intelligence Console',
       disclaimer: 'WISSENSCHAFTLICHE STUDIE - Educational Purpose Only',
       attackPath,
       finalEntropy: systemEntropy,
@@ -1181,7 +1181,7 @@ const Nexus = () => {
                 <Brain className="w-7 h-7 text-primary" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-primary font-mono tracking-wide">NEXUS v2.0</h1>
+                <h1 className="text-xl font-bold text-primary font-mono tracking-wide">NEXUS v3.0</h1>
                 <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Cryptographic Intelligence Console</p>
               </div>
             </div>

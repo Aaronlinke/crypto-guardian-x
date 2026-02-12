@@ -269,9 +269,9 @@ const TransactionGraphExplorer = ({ onLog }: TransactionGraphExplorerProps) => {
             className="flex-1 font-mono text-xs"
             placeholder="Bitcoin Address eingeben..."
           />
-          <Button size="sm" disabled={isLoading}>
+          <Button size="sm" disabled title="Erfordert Blockstream API-Erweiterung — in Planung">
             <Search className="w-4 h-4 mr-1" />
-            Analyze
+            Analyze (API geplant)
           </Button>
           <Button size="sm" variant="secondary" onClick={generateDemoGraph} disabled={isLoading}>
             <Network className="w-4 h-4 mr-1" />
