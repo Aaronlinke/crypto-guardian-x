@@ -733,17 +733,6 @@ const Nexus = () => {
     setIsScanning(false);
   }, [signatures, addLog]);
 
-  // Demo Signatures mit bekannter Schwachstelle (Sony PS3 Style)
-  const loadDemoSignatures = () => {
-    const k = "0x" + "7".repeat(64); // Fester k-Wert (wie Sony)
-    const r = "0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798"; // G.x
-    
-    setSignatures([
-      { id: 'demo1', r, s: '0x' + '1234567890abcdef'.repeat(4), z: '0x' + 'a'.repeat(64), timestamp: Date.now() },
-      { id: 'demo2', r, s: '0x' + 'fedcba0987654321'.repeat(4), z: '0x' + 'b'.repeat(64), timestamp: Date.now() + 1000 }
-    ]);
-    addLog('[DEMO] Sony PS3-Style Signaturen geladen (identisches k)');
-  };
 
   // ═══════════════════════════════════════════════════════════════════════════
   // ENTROPY ANALYZER
@@ -1306,14 +1295,9 @@ const Nexus = () => {
                       className="font-mono text-xs"
                     />
                   </div>
-                  <div className="flex gap-2">
-                    <Button onClick={addSignature} size="sm" className="flex-1">
-                      <Key className="w-4 h-4 mr-1" /> Hinzufügen
-                    </Button>
-                    <Button onClick={loadDemoSignatures} size="sm" variant="outline">
-                      <Bug className="w-4 h-4 mr-1" /> Demo (PS3)
-                    </Button>
-                  </div>
+                  <Button onClick={addSignature} size="sm" className="w-full">
+                    <Key className="w-4 h-4 mr-1" /> Signatur hinzufügen
+                  </Button>
                 </div>
 
                 {/* Signature List */}
