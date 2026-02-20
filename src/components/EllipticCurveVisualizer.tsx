@@ -13,8 +13,8 @@ interface Point {
   y: bigint;
 }
 
-// Vereinfachte Kurvenparameter für Visualisierung (kleine Werte)
-const DEMO_CURVE = {
+// Reduzierte Kurvenparameter y² = x³ + 7 (mod p) — identische Gleichung wie secp256k1
+const REDUCED_CURVE = {
   a: 0n,
   b: 7n,
   p: 97n // Kleine Primzahl für Demo
@@ -42,7 +42,7 @@ export function EllipticCurveVisualizer() {
   const G: Point = useMemo(() => {
     // Finde einen gültigen Punkt auf der Kurve y² = x³ + 7 (mod p)
     for (let x = 1n; x < BigInt(curveP); x++) {
-      const rhs = (x * x * x + DEMO_CURVE.b) % BigInt(curveP);
+      const rhs = (x * x * x + REDUCED_CURVE.b) % BigInt(curveP);
       // Prüfe ob rhs ein quadratischer Rest ist
       for (let y = 0n; y < BigInt(curveP); y++) {
         if ((y * y) % BigInt(curveP) === rhs) {
@@ -59,7 +59,7 @@ export function EllipticCurveVisualizer() {
     let count = 1n; // Punkt im Unendlichen
     const p = BigInt(curveP);
     for (let x = 0n; x < p; x++) {
-      const rhs = (x * x * x + DEMO_CURVE.b) % p;
+      const rhs = (x * x * x + REDUCED_CURVE.b) % p;
       for (let y = 0n; y < p; y++) {
         if ((y * y) % p === rhs) count++;
       }
@@ -83,7 +83,7 @@ export function EllipticCurveVisualizer() {
     if (P.x === Q.x && P.y === Q.y) {
       // Punkt-Verdopplung
       if (P.y === 0n) return null;
-      const num = (3n * P.x * P.x + DEMO_CURVE.a) % p;
+      const num = (3n * P.x * P.x + REDUCED_CURVE.a) % p;
       const denom = modInverse((2n * P.y) % p + p, p);
       lambda = (num * denom) % p;
     } else {
@@ -124,7 +124,7 @@ export function EllipticCurveVisualizer() {
     const p = BigInt(curveP);
     
     for (let x = 0n; x < p; x++) {
-      const rhs = (x * x * x + DEMO_CURVE.b) % p;
+      const rhs = (x * x * x + REDUCED_CURVE.b) % p;
       for (let y = 0n; y < p; y++) {
         if ((y * y) % p === rhs) {
           points.push({ x, y });
@@ -392,7 +392,7 @@ export function EllipticCurveVisualizer() {
     ctx.fillStyle = "#666";
     ctx.font = "10px monospace";
     ctx.textAlign = "left";
-    ctx.fillText(`Kurve: y² = x³ + ${DEMO_CURVE.b} (mod ${curveP})`, 10, 15);
+    ctx.fillText(`Kurve: y² = x³ + ${REDUCED_CURVE.b} (mod ${curveP})`, 10, 15);
     ctx.fillText(`Punkte auf Kurve: ${curvePoints.length}`, 10, 28);
     
   }, [curvePoints, G, animationStep, scalarK, showTrace, curveP, activeTab, privateKey, signature, signatureK]);
@@ -411,7 +411,9 @@ export function EllipticCurveVisualizer() {
   };
 
   const generateRandomK = () => {
-    setSignatureK(Math.floor(Math.random() * (curvePoints.length - 1)) + 1);
+    const rndBuf = new Uint32Array(1);
+    crypto.getRandomValues(rndBuf);
+    setSignatureK((rndBuf[0] % (curvePoints.length - 1)) + 1);
   };
 
   return (
@@ -423,7 +425,7 @@ export function EllipticCurveVisualizer() {
           ELLIPTIC CURVE + ECDSA
           <span className="text-primary">]</span>
           <Badge variant="outline" className="ml-auto text-[10px] bg-secondary/10 text-secondary border-secondary/30">
-            secp256k1 Demo
+            Reduzierte Kurve y²=x³+7
           </Badge>
         </CardTitle>
       </CardHeader>
@@ -724,7 +726,7 @@ export function EllipticCurveVisualizer() {
           <Info className="w-4 h-4 text-blue-400 flex-shrink-0 mt-0.5" />
           <div className="text-[10px] text-blue-300/80">
             <strong>Bitcoin secp256k1:</strong> p = 2²⁵⁶ - 2³² - 977, 
-            n ≈ 1.158 × 10⁷⁷ Punkte. Hier Demo mit p = {curveP} ({curvePoints.length} Punkte).
+            n ≈ 1.158 × 10⁷⁷ Punkte. Reduzierte Kurve mit p = {curveP} ({curvePoints.length} Punkte) — identische Mathematik, berechenbare Ordnung.
           </div>
         </div>
       </CardContent>

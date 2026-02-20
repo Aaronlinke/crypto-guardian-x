@@ -40,8 +40,10 @@ const PollardsRhoVisualizer = ({ onLog }: PollardsRhoVisualizerProps) => {
     setSolution(null);
     setIsRunning(false);
     
-    // Random target between 1 and curve order
-    const newK = BigInt(Math.floor(Math.random() * 500) + 1);
+    // Kryptographisch sicherer Zufallswert
+    const rndBuf = new Uint32Array(1);
+    crypto.getRandomValues(rndBuf);
+    const newK = BigInt((rndBuf[0] % 500) + 1);
     setTargetK(newK);
     setQ(scalarMult(newK, G));
     log(`Neues Ziel: Q = ${newK}·G`);
@@ -202,7 +204,7 @@ const PollardsRhoVisualizer = ({ onLog }: PollardsRhoVisualizerProps) => {
             Pollard's Rho ECDLP Solver
           </h3>
           <p className="text-xs text-muted-foreground">
-            Floyd's Cycle Detection auf Demo-Kurve (Ordnung ≈ {DEMO_CURVE.n.toString()})
+            Floyd's Cycle Detection auf reduzierter Kurve (Ordnung n = {DEMO_CURVE.n.toString()})
           </p>
         </div>
         <Badge variant="outline" className="font-mono">
