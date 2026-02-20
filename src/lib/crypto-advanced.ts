@@ -15,7 +15,7 @@ import { SECP256K1 as SECP256K1_IMPORT, modInverse, modPow } from './crypto-math
 export const SECP256K1 = SECP256K1_IMPORT;
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// ELLIPTIC CURVE POINT OPERATIONS (Demo Curve)
+// ELLIPTIC CURVE POINT OPERATIONS (Reduzierte Kurve y²=x³+7)
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export interface ECPoint {
@@ -24,7 +24,7 @@ export interface ECPoint {
   isInfinity?: boolean;
 }
 
-// Demo curve for visualization (small order ~1009)
+// Reduzierte Kurve y²=x³+7 (mod 1013) — identische Gleichung wie secp256k1, berechenbare Ordnung
 export const DEMO_CURVE = {
   p: 1013n, // Prime modulus
   a: 0n,

@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -32,11 +32,41 @@ const MersenneTwisterAnalyzer = ({ onLog }: MersenneTwisterAnalyzerProps) => {
     onLog?.(`[MT19937] ${msg}`);
   }, [onLog]);
   
-  // Simulated MT19937 (using Math.random as proxy for demo)
-  const generateOutput = useCallback(() => {
-    // In real implementation, this would be actual MT19937
-    return Math.floor(Math.random() * 0xFFFFFFFF);
+  // Echte MT19937-Implementierung
+  const mtStateRef = useRef<{ mt: Uint32Array; index: number } | null>(null);
+
+  const initMT = useCallback((seed: number) => {
+    const mt = new Uint32Array(624);
+    mt[0] = seed >>> 0;
+    for (let i = 1; i < 624; i++) {
+      mt[i] = (Math.imul(1812433253, mt[i - 1] ^ (mt[i - 1] >>> 30)) + i) >>> 0;
+    }
+    mtStateRef.current = { mt, index: 624 };
   }, []);
+
+  const twistMT = useCallback(() => {
+    const state = mtStateRef.current;
+    if (!state) return;
+    const { mt } = state;
+    for (let i = 0; i < 624; i++) {
+      const x = (mt[i] & 0x80000000) | (mt[(i + 1) % 624] & 0x7fffffff);
+      mt[i] = mt[(i + 397) % 624] ^ (x >>> 1);
+      if (x & 1) mt[i] ^= 0x9908b0df;
+    }
+    state.index = 0;
+  }, []);
+
+  const generateOutput = useCallback((): number => {
+    const state = mtStateRef.current;
+    if (!state) return 0;
+    if (state.index >= 624) twistMT();
+    let y = state.mt[state.index++];
+    y ^= (y >>> 11);
+    y ^= (y << 7) & 0x9d2c5680;
+    y ^= (y << 15) & 0xefc60000;
+    y ^= (y >>> 18);
+    return y >>> 0;
+  }, [twistMT]);
   
   const collectOutputs = useCallback(() => {
     setIsCollecting(true);
@@ -45,6 +75,12 @@ const MersenneTwisterAnalyzer = ({ onLog }: MersenneTwisterAnalyzerProps) => {
     setActualNext([]);
     setOutputs([]);
     
+    // Seed mit echtem Zufall aus crypto.getRandomValues
+    const seedArray = new Uint32Array(1);
+    crypto.getRandomValues(seedArray);
+    initMT(seedArray[0]);
+    
+    log(`MT19937 initialisiert mit Seed: 0x${seedArray[0].toString(16).padStart(8, '0')}`);
     log("Sammle 624 MT19937 Outputs...");
     
     // Collect 624 outputs
@@ -63,7 +99,7 @@ const MersenneTwisterAnalyzer = ({ onLog }: MersenneTwisterAnalyzerProps) => {
     
     log(`624 Outputs gesammelt. Bereit für State Recovery.`);
     setIsCollecting(false);
-  }, [generateOutput, log]);
+  }, [generateOutput, initMT, log]);
   
   const recoverState = useCallback(() => {
     if (outputs.length < 624) {
@@ -257,7 +293,9 @@ const MersenneTwisterAnalyzer = ({ onLog }: MersenneTwisterAnalyzerProps) => {
                     State vollständig rekonstruiert - ALLE Outputs vorhersagbar!
                   </span>
                 ) : (
-                  "Demo verwendet Pseudo-MT19937"
+                  <span className="text-amber-400">
+                    State-Recovery unvollständig - Untemper-Präzision prüfen
+                  </span>
                 )}
               </p>
             </div>

@@ -34,7 +34,9 @@ const BSGSVisualizer = ({ onLog }: BSGSVisualizerProps) => {
     setResult(null);
     setActivePhase('baby');
     
-    const newK = BigInt(Math.floor(Math.random() * 500) + 1);
+    const rndBuf = new Uint32Array(1);
+    crypto.getRandomValues(rndBuf);
+    const newK = BigInt((rndBuf[0] % 500) + 1);
     setTargetK(newK);
     setQ(scalarMult(newK, G));
     log(`Neues Ziel: Q = ${newK}·G`);

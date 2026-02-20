@@ -11,17 +11,21 @@ interface HashAttempt {
   hash: string;
 }
 
-// Simples Hash für Demo (nicht kryptographisch!)
-function simpleHash(input: string, bits: number): string {
-  let hash = 0;
-  for (let i = 0; i < input.length; i++) {
-    const char = input.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash;
-  }
+// Truncated SHA-256 via Web Crypto API
+async function sha256Truncated(input: string, bits: number): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(input);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = new Uint8Array(hashBuffer);
+  
+  // Truncate to desired bit length
   const maxVal = Math.pow(2, bits);
-  hash = Math.abs(hash) % maxVal;
-  return hash.toString(16).padStart(Math.ceil(bits / 4), '0');
+  let hashNum = 0;
+  for (let i = 0; i < Math.min(4, hashArray.length); i++) {
+    hashNum = (hashNum << 8) | hashArray[i];
+  }
+  hashNum = Math.abs(hashNum) % maxVal;
+  return hashNum.toString(16).padStart(Math.ceil(bits / 4), '0');
 }
 
 export function HashCollisionDemo() {
@@ -41,14 +45,16 @@ export function HashCollisionDemo() {
   
   const generateRandomInput = (): string => {
     const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    const rndBuf = new Uint8Array(8);
+    crypto.getRandomValues(rndBuf);
     let result = '';
     for (let i = 0; i < 8; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
+      result += chars.charAt(rndBuf[i] % chars.length);
     }
     return result;
   };
   
-  const runCollisionSearch = () => {
+  const runCollisionSearch = async () => {
     if (collisionFound) return;
     
     const batchSize = 100;
@@ -57,7 +63,7 @@ export function HashCollisionDemo() {
     
     for (let i = 0; i < batchSize; i++) {
       const input = generateRandomInput();
-      const hash = simpleHash(input, hashBits);
+      const hash = await sha256Truncated(input, hashBits);
       
       if (newHashMap.has(hash)) {
         const existingInput = newHashMap.get(hash)!;
@@ -272,9 +278,9 @@ export function HashCollisionDemo() {
           <div className="font-mono text-[9px] text-primary">
             P(Kollision) ≈ 1 - e^(-n²/2H)
           </div>
-          <div className="flex items-center gap-1 text-amber-400 text-[9px] mt-1">
-            <AlertTriangle className="w-3 h-3" />
-            <span>Demo verwendet vereinfachtes Hashing!</span>
+          <div className="flex items-center gap-1 text-primary text-[9px] mt-1">
+            <ShieldCheck className="w-3 h-3" />
+            <span>Verwendet echtes SHA-256 (truncated auf {hashBits} Bit)</span>
           </div>
         </div>
       </CardContent>
