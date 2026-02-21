@@ -30,14 +30,20 @@ const HNPLatticeAttack = ({ onLog }: HNPLatticeAttackProps) => {
     const n = numSignatures[0];
     
     for (let i = 0; i < n; i++) {
-      // Generate random signature with known MSBs of nonce
-      const k = BigInt(Math.floor(Math.random() * Number(SECP256K1.N / 1000n)));
+      // Generate random signature with known MSBs of nonce using CSPRNG
+      const rngBytes = new Uint8Array(80);
+      crypto.getRandomValues(rngBytes);
+      
+      const kBytes = rngBytes.slice(0, 16);
+      const k = BigInt('0x' + Array.from(kBytes, b => b.toString(16).padStart(2, '0')).join('')) % (SECP256K1.N / 1000n);
       const knownValue = k >> BigInt(256 - bits);
       
+      const makeBigInt = (bytes: Uint8Array) => BigInt('0x' + Array.from(bytes, b => b.toString(16).padStart(2, '0')).join(''));
+      
       sigs.push({
-        r: BigInt(Math.floor(Math.random() * 2**128)) * BigInt(2**128) + BigInt(Math.floor(Math.random() * 2**128)),
-        s: BigInt(Math.floor(Math.random() * 2**128)) * BigInt(2**128) + BigInt(Math.floor(Math.random() * 2**128)),
-        z: BigInt(Math.floor(Math.random() * 2**128)) * BigInt(2**128) + BigInt(Math.floor(Math.random() * 2**128)),
+        r: makeBigInt(rngBytes.slice(16, 48)),
+        s: makeBigInt(rngBytes.slice(48, 64)),
+        z: makeBigInt(rngBytes.slice(64, 80)),
         knownBits: bits,
         knownValue
       });

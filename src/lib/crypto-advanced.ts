@@ -489,9 +489,11 @@ export function simulateTimingAttack(
   for (let i = bits - 1; i >= 0; i--) {
     const bit = Number((exponent >> BigInt(i)) & 1n) as 0 | 1;
     
-    // Simulate timing with noise
-    const baseSquare = 100 + Math.random() * 10;
-    const baseMultiply = bit ? (150 + Math.random() * 15) : 0;
+    // Simulate timing with cryptographic noise
+    const noise = new Uint8Array(2);
+    crypto.getRandomValues(noise);
+    const baseSquare = 100 + (noise[0] / 255) * 10;
+    const baseMultiply = bit ? (150 + (noise[1] / 255) * 15) : 0;
     
     measurements.push({
       bit: i,
@@ -516,7 +518,9 @@ export function montgomeryLadderTiming(
     const bit = Number((exponent >> BigInt(i)) & 1n) as 0 | 1;
     
     // Constant time - always same operations
-    const baseTime = 250 + Math.random() * 5;
+    const noise = new Uint8Array(1);
+    crypto.getRandomValues(noise);
+    const baseTime = 250 + (noise[0] / 255) * 5;
     
     measurements.push({
       bit: i,

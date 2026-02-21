@@ -106,17 +106,21 @@ export function LoomBusTelemetry() {
     const baseTemp = 25;
     const enthalpyContrib = Math.abs(H) * 2.5;
     const entropyContrib = entropy * 0.5;
-    return baseTemp + enthalpyContrib + entropyContrib + Math.random() * 2;
+    const noise = new Uint8Array(1);
+    crypto.getRandomValues(noise);
+    return baseTemp + enthalpyContrib + entropyContrib + (noise[0] / 255) * 2;
   }, []);
 
   // LoomBus Message generieren
   const generateLoomBusMessage = useCallback((state: typeof currentState): LoomBusMessage => {
+    const rng = new Uint16Array(5);
+    crypto.getRandomValues(rng);
     return {
-      rid: Math.floor(Math.random() * 65536),
-      src: ["ENTROPY", "NAV", "GEO", "FLUX", "GATE"][Math.floor(Math.random() * 5)],
-      kind: ["SYNC", "DATA", "CTRL", "ACK"][Math.floor(Math.random() * 4)],
-      cap: Math.floor(Math.random() * 16),
-      token: Math.floor(Math.random() * 256),
+      rid: rng[0],
+      src: ["ENTROPY", "NAV", "GEO", "FLUX", "GATE"][rng[1] % 5],
+      kind: ["SYNC", "DATA", "CTRL", "ACK"][rng[2] % 4],
+      cap: rng[3] % 16,
+      token: rng[4] % 256,
       a: Math.floor(state.H * 1000),
       b: Math.floor(state.N * 1000)
     };
@@ -136,6 +140,8 @@ export function LoomBusTelemetry() {
         const entropy = Math.abs(next.H) + Math.abs(next.N) + Math.abs(next.G);
         const temp = calculateGateTemperature(next.H, next.N, entropy);
 
+        const capToken = new Uint8Array(1);
+        crypto.getRandomValues(capToken);
         const point: TelemetryPoint = {
           timestamp: Date.now(),
           flux_vector: flux,
@@ -144,7 +150,7 @@ export function LoomBusTelemetry() {
           N: next.N,
           G: next.G,
           entropy: entropy,
-          capability_token: Math.floor(Math.random() * 256)
+          capability_token: capToken[0]
         };
 
         setTelemetryData(data => {

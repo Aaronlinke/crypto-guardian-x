@@ -42,18 +42,11 @@ export function QuantumEntropyVisualizer() {
     return entropy;
   }, []);
 
-  // Sammle Entropie aus verschiedenen Quellen
+  // Sammle Entropie aus kryptographisch sicherer Quelle
   const collectEntropy = useCallback(() => {
-    // Zeitbasierte Entropie (Mikrosekunden-Variation)
-    const timeEntropy = performance.now() * 1000;
-    
-    // Math.random (PRNG, aber gut für Demo)
-    const randomEntropy = Math.random() * 256;
-    
-    // Kombiniere zu einem Byte
-    const combined = Math.floor((timeEntropy + randomEntropy) % 256);
-    
-    return combined;
+    const buf = new Uint8Array(1);
+    crypto.getRandomValues(buf);
+    return buf[0];
   }, []);
 
   // Entropie-Sammlung Animation

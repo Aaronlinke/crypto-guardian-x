@@ -73,7 +73,9 @@ const TransactionGraphExplorer = ({ onLog }: TransactionGraphExplorerProps) => {
     let clusterIdx = 1;
     transactions.forEach((tx, txIndex) => {
       const angle = (txIndex / Math.max(transactions.length, 1)) * 2 * Math.PI;
-      const radius = 120 + Math.random() * 40;
+      const rngBuf = new Uint8Array(1);
+      crypto.getRandomValues(rngBuf);
+      const radius = 120 + (rngBuf[0] / 255) * 40;
 
       // Input addresses (senders)
       tx.vin.forEach((input, i) => {
