@@ -38,9 +38,11 @@ export function OmnigenesisPipeline() {
 
   const resetPipeline = () => {
     setCurrentStage(0);
-    setEntropy(Math.floor(Math.random() * 1000000));
-    setNavigation(Math.floor(Math.random() * 1000));
-    setGeometry(Math.floor(Math.random() * 100));
+    const rng = new Uint32Array(3);
+    crypto.getRandomValues(rng);
+    setEntropy(rng[0] % 1000000);
+    setNavigation(rng[1] % 1000);
+    setGeometry(rng[2] % 100);
     setGeneratedKeys([]);
     setStages([
       {

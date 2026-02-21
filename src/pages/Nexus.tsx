@@ -844,7 +844,9 @@ const Nexus = () => {
         
         if (activeNodes.length === 0) {
           const entryPoints = newNodes.filter(n => n.type === 'entry');
-          const randomEntry = entryPoints[Math.floor(Math.random() * entryPoints.length)];
+          const rng = new Uint32Array(1);
+          crypto.getRandomValues(rng);
+          const randomEntry = entryPoints[rng[0] % entryPoints.length];
           randomEntry.active = true;
           setAttackPath([randomEntry.id]);
           addLog(`[ATTACK] Einstiegspunkt: ${randomEntry.name}`);
@@ -853,8 +855,10 @@ const Nexus = () => {
           }
         } else {
           for (const node of activeNodes) {
-            if (node.connections.length > 0 && Math.random() > 0.4) {
-              const nextId = node.connections[Math.floor(Math.random() * node.connections.length)];
+            const rng2 = new Uint32Array(2);
+            crypto.getRandomValues(rng2);
+            if (node.connections.length > 0 && (rng2[0] % 100) > 40) {
+              const nextId = node.connections[rng2[1] % node.connections.length];
               const nextNode = newNodes.find(n => n.id === nextId);
               if (nextNode && !nextNode.active) {
                 nextNode.active = true;
@@ -1796,9 +1800,9 @@ const Nexus = () => {
                     </Button>
                     <Button 
                       onClick={() => {
-                        const random = Array.from({ length: 64 }, () => 
-                          Math.floor(Math.random() * 256).toString(16).padStart(2, '0')
-                        ).join('');
+                        const randomBytes = new Uint8Array(64);
+                        crypto.getRandomValues(randomBytes);
+                        const random = Array.from(randomBytes, b => b.toString(16).padStart(2, '0')).join('');
                         setEntropyInput(random);
                       }}
                       size="sm" 

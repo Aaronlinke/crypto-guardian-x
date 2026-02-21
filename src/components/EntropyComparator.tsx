@@ -70,8 +70,10 @@ export function EntropyComparator() {
       description: "Simulation des Debian OpenSSL Bugs (2006-2008)",
       quality: "bad",
       generator: () => {
-        // Simuliert den Debian-Bug: RNG wurde nur mit PID geseeded
-        const pid = Math.floor(Math.random() * 32768);
+        // Reproduziert den Debian-Bug: RNG wurde nur mit PID geseeded (max 32768 Möglichkeiten)
+        const pidBuf = new Uint16Array(1);
+        crypto.getRandomValues(pidBuf);
+        const pid = pidBuf[0] % 32768;
         const hash = pid.toString();
         
         return Array.from({ length: sampleSize }, (_, i) => {

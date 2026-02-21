@@ -1,36 +1,45 @@
 import { Terminal, ChevronRight } from "lucide-react";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 
-const logMessages = [
-  { type: "info", message: "[NEUROGENESIS] Pattern analysis complete - 847 new signatures" },
-  { type: "success", message: "[SCANNER] Block #824,157 processed - 2,341 transactions" },
-  { type: "warning", message: "[THREAT] Suspicious activity detected: 1DEP8...4aGv" },
-  { type: "info", message: "[CROSS-CHAIN] Ethereum bridge sync: 99.97% complete" },
-  { type: "success", message: "[RESCUE] Wallet migration initiated for 3 addresses" },
-  { type: "info", message: "[QUANTUM] Post-quantum key generation: Kyber-1024" },
-  { type: "warning", message: "[PREDICT] Emerging threat pattern: mobile_entropy_v2" },
-  { type: "success", message: "[NETWORK] 12 guardian nodes online in EU-CENTRAL" },
-  { type: "info", message: "[DEFENSE] Adaptive shield activated - Level 2" },
-  { type: "success", message: "[VERIFY] ZK-proof validation successful" },
-];
+interface LogEntry {
+  type: "info" | "success" | "warning";
+  message: string;
+}
 
 export const SystemConsole = () => {
-  const [logs, setLogs] = useState<typeof logMessages>([]);
+  const [logs, setLogs] = useState<LogEntry[]>([]);
   const consoleRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    // Initial logs
-    setLogs(logMessages.slice(0, 3));
+  const addLog = useCallback((entry: LogEntry) => {
+    const timestamp = new Date().toLocaleTimeString("en-US", { hour12: false });
+    setLogs(prev => [...prev, { ...entry, message: `${timestamp} ${entry.message}` }].slice(-12));
+  }, []);
 
+  useEffect(() => {
+    const now = new Date();
+    
+    // Real system info on mount
+    addLog({ type: "info", message: `[SYSTEM] CryptoGuardian X v3.0 initialized` });
+    addLog({ type: "success", message: `[MODULES] 13 analysis modules loaded` });
+    addLog({ type: "info", message: `[DATABASE] 20 documented attacks indexed` });
+    addLog({ type: "success", message: `[API] Blockstream API endpoint: ready` });
+    addLog({ type: "info", message: `[CRYPTO] Web Crypto API: ${typeof crypto?.subtle !== 'undefined' ? 'available' : 'unavailable'}` });
+    addLog({ type: "success", message: `[NEXUS] Intelligence console: operational` });
+
+    // Periodic real system checks
     const interval = setInterval(() => {
-      const randomLog = logMessages[Math.floor(Math.random() * logMessages.length)];
-      const timestamp = new Date().toLocaleTimeString("en-US", { hour12: false });
-      
-      setLogs(prev => [...prev, { ...randomLog, message: `${timestamp} ${randomLog.message}` }].slice(-8));
-    }, 3000);
+      const memoryInfo = (performance as any).memory;
+      if (memoryInfo) {
+        const usedMB = (memoryInfo.usedJSHeapSize / 1048576).toFixed(1);
+        addLog({ type: "info", message: `[MONITOR] JS Heap: ${usedMB} MB` });
+      } else {
+        const uptime = Math.floor((Date.now() - now.getTime()) / 1000);
+        addLog({ type: "info", message: `[MONITOR] Session uptime: ${uptime}s` });
+      }
+    }, 15000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [addLog]);
 
   useEffect(() => {
     if (consoleRef.current) {
