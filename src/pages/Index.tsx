@@ -54,6 +54,11 @@ const Index = () => {
           <SRILCalculator />
         </div>
 
+        {/* Crypto Inversion Pipeline - Full Width */}
+        <div className="mb-6">
+          <CryptoInversionPipeline />
+        </div>
+
         {/* Inversions-Engine - Full Width */}
         <div className="mb-6">
           <InversionEngine />
