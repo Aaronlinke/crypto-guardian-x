@@ -672,6 +672,17 @@ const Papers = () => {
               <Sigma className="w-3 h-3 inline mr-1" />
               Paper II: Algebraische Grundlagen & ECDSA
             </button>
+            <button
+              onClick={() => setActivePaper(3)}
+              className={`px-4 py-2 rounded text-xs font-mono transition-colors ${
+                activePaper === 3
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-card border border-border text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <GitBranch className="w-3 h-3 inline mr-1" />
+              Paper III: Vorwärts-Rückwärts-Inversion
+            </button>
           </div>
         </div>
 
