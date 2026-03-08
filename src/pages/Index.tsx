@@ -21,6 +21,7 @@ import { LLLLatticeVisualizer } from "@/components/LLLLatticeVisualizer";
 import { EntropyComparator } from "@/components/EntropyComparator";
 import { Base58CheckVisualizer } from "@/components/Base58CheckVisualizer";
 import { HashCollisionDemo } from "@/components/HashCollisionDemo";
+import { InversionEngine } from "@/components/InversionEngine";
 const Index = () => {
   return (
     <div className="min-h-screen bg-background relative">
