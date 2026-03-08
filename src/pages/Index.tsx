@@ -22,6 +22,7 @@ import { EntropyComparator } from "@/components/EntropyComparator";
 import { Base58CheckVisualizer } from "@/components/Base58CheckVisualizer";
 import { HashCollisionDemo } from "@/components/HashCollisionDemo";
 import { InversionEngine } from "@/components/InversionEngine";
+import { CryptoInversionPipeline } from "@/components/CryptoInversionPipeline";
 const Index = () => {
   return (
     <div className="min-h-screen bg-background relative">
@@ -51,6 +52,11 @@ const Index = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
           <LoomBusTelemetry />
           <SRILCalculator />
+        </div>
+
+        {/* Crypto Inversion Pipeline - Full Width */}
+        <div className="mb-6">
+          <CryptoInversionPipeline />
         </div>
 
         {/* Inversions-Engine - Full Width */}
