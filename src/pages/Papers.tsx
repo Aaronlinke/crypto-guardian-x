@@ -688,7 +688,7 @@ const Papers = () => {
 
         {/* Paper Title Card */}
         <div className="terminal-card mb-6 text-center py-8">
-          {activePaper === 1 ? (
+          {activePaper === 1 && (
             <>
               <h2 className="font-display text-xl font-bold tracking-wider text-primary mb-2">
                 FORMALE ANALYSE: ZUSTANDSGEBUNDENE SCHLÜSSELSYSTEME
@@ -700,7 +700,8 @@ const Papers = () => {
                 Status: Formal vollständig · Peer-Review empfohlen vor Publikation
               </p>
             </>
-          ) : (
+          )}
+          {activePaper === 2 && (
             <>
               <h2 className="font-display text-xl font-bold tracking-wider text-primary mb-2">
                 FORMALE MATHEMATISCHE SYNTHESE
@@ -713,10 +714,25 @@ const Papers = () => {
               </p>
             </>
           )}
+          {activePaper === 3 && (
+            <>
+              <h2 className="font-display text-xl font-bold tracking-wider text-primary mb-2">
+                VOLLSTÄNDIGE VORWÄRTS-RÜCKWÄRTS-INVERSION
+              </h2>
+              <p className="text-xs text-muted-foreground">
+                Rückwärtsoperator · Invariante Klassen · Fixpunkte · Nicht-Widerlegbarkeit · Numerische Validierung
+              </p>
+              <p className="text-[10px] text-muted-foreground mt-2">
+                Rechnung geschlossen · Beidseitig konsistent · Keine Widerlegung möglich
+              </p>
+            </>
+          )}
         </div>
 
         {/* Paper Content */}
-        {activePaper === 1 ? <PaperI /> : <PaperII />}
+        {activePaper === 1 && <PaperI />}
+        {activePaper === 2 && <PaperII />}
+        {activePaper === 3 && <PaperIII />}
 
         {/* Footer */}
         <footer className="border-t border-border pt-4 pb-8 mt-8">
