@@ -1,6 +1,6 @@
 import { TerminalHeader } from "@/components/TerminalHeader";
 import { KaTeXMath } from "@/components/KaTeXMath";
-import { BookOpen, ChevronDown, ChevronRight, FileText, Shield, Lock, Sigma, Atom } from "lucide-react";
+import { BookOpen, ChevronDown, ChevronRight, FileText, Shield, Lock, Sigma, Atom, GitBranch } from "lucide-react";
 import { useState } from "react";
 
 const Section = ({ title, icon, children, defaultOpen = false }: { title: string; icon: React.ReactNode; children: React.ReactNode; defaultOpen?: boolean }) => {
