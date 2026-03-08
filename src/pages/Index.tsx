@@ -53,6 +53,11 @@ const Index = () => {
           <SRILCalculator />
         </div>
 
+        {/* Inversions-Engine - Full Width */}
+        <div className="mb-6">
+          <InversionEngine />
+        </div>
+
         {/* Chronoplast & Bitcoin Fixpunkt */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
           <ChronoplastVisualizer />
