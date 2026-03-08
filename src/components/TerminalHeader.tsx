@@ -43,6 +43,12 @@ export const TerminalHeader = () => {
             >
               <span className="animate-pulse">◉</span> NEXUS v2
             </a>
+            <a 
+              href="/papers" 
+              className="flex items-center gap-1 px-2 py-1 rounded bg-secondary/10 border border-secondary/30 text-secondary text-xs font-mono hover:bg-secondary/20 transition-colors"
+            >
+              <span>📄</span> PAPERS
+            </a>
           </div>
 
           {/* System Info */}
