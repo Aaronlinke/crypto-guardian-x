@@ -10,6 +10,7 @@ import {
 import { analyzeEntropy, type EntropyReport } from "@/lib/entropy-analysis";
 import { generateInvertibilityProof, type InvertibilityProof } from "@/lib/proof-of-invertibility";
 import { exportAsJSON } from "@/lib/export-utils";
+import { downloadCompleteMathExport } from "@/lib/complete-math-export";
 
 type PipelineStage = 'idle' | 'entropy' | 'inversion' | 'seal' | 'complete';
 
