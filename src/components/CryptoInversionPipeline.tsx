@@ -110,6 +110,9 @@ export function CryptoInversionPipeline() {
                 <Download className="w-3 h-3" /> Export Beweis (JSON)
               </Button>
             )}
+            <Button size="sm" variant="outline" onClick={downloadCompleteMathExport} className="text-xs h-7 gap-1">
+              <Download className="w-3 h-3" /> VOLLSTÄNDIGE MATHEMATIK (JSON)
+            </Button>
           </div>
         </div>
       </CardHeader>
