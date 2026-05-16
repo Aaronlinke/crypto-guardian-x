@@ -39,6 +39,7 @@ import WeakKeyDatabase from "@/components/nexus/WeakKeyDatabase";
 import HNPLatticeAttack from "@/components/nexus/HNPLatticeAttack";
 import TransactionGraphExplorer from "@/components/nexus/TransactionGraphExplorer";
 import UnifiedResearchDashboard from "@/components/nexus/UnifiedResearchDashboard";
+import NonHarvestabilityDemo from "@/components/nexus/NonHarvestabilityDemo";
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // NEXUS v3.0 - CRYPTOGRAPHIC INTELLIGENCE CONSOLE
@@ -1253,6 +1254,9 @@ const Nexus = () => {
               <TabsTrigger value="weakkeys" className="font-mono text-xs whitespace-nowrap">
                 <Database className="w-4 h-4 mr-1" /> Weak Keys
               </TabsTrigger>
+              <TabsTrigger value="nonharvest" className="font-mono text-xs whitespace-nowrap bg-gradient-to-r from-primary/10 to-secondary/10">
+                <Shield className="w-4 h-4 mr-1 text-primary" /> Non-Harvest
+              </TabsTrigger>
               <TabsTrigger value="research" className="font-mono text-xs whitespace-nowrap bg-gradient-to-r from-red-500/10 to-orange-500/10">
                 <Brain className="w-4 h-4 mr-1 text-red-400" /> Master-Formeln
               </TabsTrigger>
@@ -2142,6 +2146,7 @@ const Nexus = () => {
           <TabsContent value="script"><BitcoinScriptAnalyzer onLog={addLog} /></TabsContent>
           <TabsContent value="txgraph"><TransactionGraphExplorer onLog={addLog} /></TabsContent>
           <TabsContent value="weakkeys"><WeakKeyDatabase onLog={addLog} /></TabsContent>
+          <TabsContent value="nonharvest"><NonHarvestabilityDemo onLog={addLog} /></TabsContent>
           <TabsContent value="research">
             <UnifiedResearchDashboard 
               onModuleNavigate={(module) => setActiveTab(module)}
