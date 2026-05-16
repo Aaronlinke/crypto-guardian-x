@@ -449,6 +449,90 @@ export const formulas: Formula[] = [
     description: "Boolean satisfiability is NP-complete: every NP problem can be reduced to SAT in polynomial time",
     variables: { "SAT": "Boolean satisfiability problem", "≤_p": "Polynomial-time reduction", "NP": "Nondeterministic polynomial time" }
   },
+
+  // === ZUSTANDSGEBUNDENE SCHLÜSSEL (W_dyn) ===
+  {
+    id: "wdyn-system",
+    name: "Zustandsgebundenes Wallet-System",
+    category: "W_dyn",
+    latex: "\\mathcal{W}_{dyn} = (X, F: X \\times \\mathbb{T} \\times \\Sigma \\to X, G: X \\to \\mathcal{A}, \\sigma)",
+    description: "Dynamisches Schlüssel-Evolutionssystem ohne stabilen Zielwert (Def. 1.2.1)",
+    variables: { X: "Zustandsraum |X|=2^η", F: "Übergangsfunktion", G: "Adressfunktion", "σ": "Kontextvektor (online)" }
+  },
+  {
+    id: "wdyn-trajectory",
+    name: "Zustandstrajectorie",
+    category: "W_dyn",
+    latex: "x_t = F^t(x_0, \\Sigma^{[0,t)}), \\quad A_t = G(x_t)",
+    description: "Iterierte Anwendung von F über Zeit & Kontext-Sequenz",
+    variables: { "x_t": "Zustand zur Zeit t", "A_t": "Adresse zur Zeit t", "Σ": "Kontextsequenz" }
+  },
+  {
+    id: "wdyn-forward-secrecy",
+    name: "Forward Secrecy (Axiom 1.3.2)",
+    category: "W_dyn",
+    latex: "I(x_t ; A_0, A_1, \\ldots, A_{t-1}) \\leq \\epsilon_{fs}",
+    description: "Bisherige Adressen offenbaren keine Information über aktuellen Zustand",
+    variables: { I: "Mutual Information", "ε_fs": "FS-Fehler (vernachlässigbar)" }
+  },
+  {
+    id: "wdyn-non-invertibility",
+    name: "Nicht-Invertierbarkeit (Axiom 1.3.3)",
+    category: "W_dyn",
+    latex: "\\Pr[\\mathcal{A}(x_{t+1}, t, \\sigma_t) = x_t] \\leq 2^{-\\eta} + \\epsilon",
+    description: "Kein effizienter Algorithmus invertiert F ohne σ_t",
+    variables: { "η": "Entropie-Parameter", "σ_t": "Kontext (außerhalb Adversary-Modell)" }
+  },
+  {
+    id: "wdyn-non-harvest",
+    name: "Non-Harvestability (Satz 2.3.1)",
+    category: "W_dyn",
+    latex: "\\Pr[\\text{Erfolg bei } \\tau > t^*] = 0",
+    description: "Kern-Resultat: rekonstruierter Zustand x_t* ist ab t*+1 wertlos",
+    variables: { "t*": "Angriffszeitpunkt", "τ": "Späterer Zeitpunkt" }
+  },
+  {
+    id: "wdyn-zero-info",
+    name: "Zero-Information Korollar (2.4.1)",
+    category: "W_dyn",
+    latex: "I(x_{t+k}; A_t, A_{t+1}, \\ldots, A_{t+k-1}) = 0",
+    description: "Beobachtung früherer Adressen → null Information über zukünftige Zustände",
+    variables: { k: "Forward-Schritte ≥ 1" }
+  },
+  {
+    id: "wdyn-equivocation",
+    name: "Konstante Äquivokation (3.2.1)",
+    category: "W_dyn",
+    latex: "E_t = H(x_t \\mid A_0, \\ldots, A_{t-1}) = \\eta - \\epsilon_{fs} \\approx \\eta",
+    description: "Äquivokation bleibt über gesamte Lebensdauer konstant (kein Entropie-Kollaps)",
+    variables: { "E_t": "Äquivokation zur Zeit t", H: "Bedingte Entropie" }
+  },
+  {
+    id: "wdyn-regret",
+    name: "Angreifer-Regret (Def. 9.2.1)",
+    category: "W_dyn",
+    latex: "\\text{Regret}(\\mathcal{A}, t) = T_A + 2^{\\eta} \\cdot 0 = T_A",
+    description: "Regret ist immer positiv → rationaler Offline-Angriff unmöglich",
+    variables: { "T_A": "Rechenzeit Angreifer", "V(x_t)": "Wert des Zustands = 0 nach t+1" }
+  },
+
+  // === STRUKTURIERTER KANDIDATENRAUM (Paper II Teil IV) ===
+  {
+    id: "affine-nonce",
+    name: "Affin-parametrisierter Nonce-Raum",
+    category: "W_dyn",
+    latex: "k_i = \\alpha + \\beta \\cdot i \\pmod{N}, \\quad \\gcd(\\beta, N) = 1",
+    description: "Strukturierter Nonce-Kandidatenraum mit affiner Parametrisierung",
+    variables: { "α": "Offset", "β": "Schrittweite", N: "Kurvenordnung" }
+  },
+  {
+    id: "induced-key-space",
+    name: "Induzierter Schlüsselraum",
+    category: "W_dyn",
+    latex: "d_i = c_0 + c_1 \\cdot i \\pmod{N}, \\quad c_1 = s \\beta r^{-1}",
+    description: "Affine Schlüsselableitung aus strukturiertem Nonce (Satz 4.3.1: Surjektivität)",
+    variables: { "c_0": "(sα-z)r⁻¹", "c_1": "sβr⁻¹", "d_i": "Kandidatenschlüssel" }
+  },
 ];
 
 export const categories = [...new Set(formulas.map(f => f.category))];
