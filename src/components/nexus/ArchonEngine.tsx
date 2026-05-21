@@ -21,7 +21,7 @@ interface ArchonRound {
   experion: { test_proposal: string; prediction: string; observable_metrics: string[] };
 }
 
-interface Props { onLog?: (e: { type: "info" | "success" | "warning"; message: string }) => void }
+interface Props { onLog?: (message: string) => void }
 
 const AGENT_META = [
   { key: "archon", title: "ARCHON · These", icon: Brain, color: "text-primary" },
