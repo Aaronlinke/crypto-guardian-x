@@ -41,7 +41,7 @@ export default function ArchonEngine({ onLog }: Props) {
   const runRound = async () => {
     if (!topic.trim() || loading) return;
     setLoading(true);
-    onLog?.({ type: "info", message: `[ARCHON-100] Runde ${rounds.length + 1} gestartet` });
+    onLog?.(`[ARCHON-100] Runde ${rounds.length + 1} gestartet`);
     try {
       const previous = rounds[rounds.length - 1]?.integron.definition_v2;
       const { data, error } = await supabase.functions.invoke("archon-engine", {
@@ -51,17 +51,17 @@ export default function ArchonEngine({ onLog }: Props) {
       if (data?.error) throw new Error(data.error);
       const round: ArchonRound = data.round;
       setRounds((prev) => [...prev, round]);
-      onLog?.({ type: "success", message: `[ARCHON-100] theory_score=${round.metron.theory_score.toFixed(2)}` });
+      onLog?.(`[ARCHON-100] theory_score=${round.metron.theory_score.toFixed(2)}`);
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Unbekannter Fehler";
       toast({ variant: "destructive", title: "ARCHON-100 Fehler", description: msg });
-      onLog?.({ type: "warning", message: `[ARCHON-100] ${msg}` });
+      onLog?.(`[ARCHON-100] ${msg}`);
     } finally {
       setLoading(false);
     }
   };
 
-  const reset = () => { setRounds([]); onLog?.({ type: "info", message: "[ARCHON-100] Reset" }); };
+  const reset = () => { setRounds([]); onLog?.("[ARCHON-100] Reset"); };
 
   const exportJSON = () => {
     const blob = new Blob([JSON.stringify({ topic, rounds }, null, 2)], { type: "application/json" });
