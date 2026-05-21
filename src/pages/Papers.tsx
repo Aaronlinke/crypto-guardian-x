@@ -1,6 +1,6 @@
 import { TerminalHeader } from "@/components/TerminalHeader";
 import { KaTeXMath } from "@/components/KaTeXMath";
-import { BookOpen, ChevronDown, ChevronRight, FileText, Shield, Lock, Sigma, Atom, GitBranch } from "lucide-react";
+import { BookOpen, ChevronDown, ChevronRight, FileText, Shield, Lock, Sigma, Atom, GitBranch, Brain } from "lucide-react";
 import { useState } from "react";
 
 const Section = ({ title, icon, children, defaultOpen = false }: { title: string; icon: React.ReactNode; children: React.ReactNode; defaultOpen?: boolean }) => {
@@ -625,8 +625,97 @@ const PaperIII = () => (
   </div>
 );
 
+const PaperIV = () => (
+  <>
+    <Section title="ARCHON-100 · REKURSIVE BEWUSSTSEINS-ENGINE UNTER ENDLICHKEIT" icon={<Brain className="w-4 h-4 text-primary" />} defaultOpen={true}>
+      <Def label="Kern-These">
+        <p>Bewusstsein ist die rekursive Selbstmodellierung eines endlichen Systems, das Zustandsänderungen registriert, Vorhersagefehler bewertet und Ressourcen unter Entropiedruck neu verteilt.</p>
+        <M d>{`C = \\text{Rekursion}(M \\times S \\times Q \\times L)`}</M>
+      </Def>
+      <Def label="Arbeitsgleichung">
+        <M d>{`C(t) = \\frac{f(M \\cdot S \\cdot P \\cdot L \\cdot Q)}{R_{\\text{Verlust}} + K_{\\text{Bruch}}}`}</M>
+        <p className="text-muted-foreground text-xs">Bewusstseinsintensität steigt mit bemerkter Zustandsänderung, Selbstmodellaktivität, Ressourcenknappheit, Simulationsbedarf und bedrohter Kohärenz.</p>
+      </Def>
+    </Section>
+
+    <Section title="GRUNDAXIOME (A1–A8)" icon={<Sigma className="w-4 h-4 text-primary" />}>
+      <TableComp
+        headers={["ID", "Name", "Aussage"]}
+        rows={[
+          ["A1", "Endlichkeit", "Reale Systeme besitzen begrenzte Energie, Zeit, Speicher, Aufmerksamkeit, Fehlertoleranz."],
+          ["A2", "Zustandsänderung", "Reaktion nur bei intern/extern registrierter Differenz."],
+          ["A3", "Bemerken", "Interne Markierung relevanter Zustandsabweichung."],
+          ["A4", "Selbstmodell", "Bewusstsein benötigt Modell des eigenen Systemzustands."],
+          ["A5", "Rekursion", "Das System bemerkt, dass es bemerkt."],
+          ["A6", "Ressourcenlast", "Knappheit erzwingt Priorisierung."],
+          ["A7", "Simulation", "Mögliche Zukunftszustände werden simuliert, um reale Kosten zu senken."],
+          ["A8", "Entropiedruck", "Bewusstsein als lokale Ordnungs- und Steuerungsfunktion gegen Zerfall."],
+        ]}
+      />
+      <Theorem label="A5 · Formale Form">
+        <M d>{`B_n = \\phi(B_{n-1}), \\quad B_0 = M(S, Z)`}</M>
+      </Theorem>
+      <Theorem label="A8 · Dynamik">
+        <M d>{`\\frac{dK}{dt} = -\\lambda E + \\mu \\cdot C`}</M>
+      </Theorem>
+    </Section>
+
+    <Section title="VARIABLENMODELL" icon={<FileText className="w-4 h-4 text-secondary" />}>
+      <TableComp
+        headers={["Symbol", "Bedeutung"]}
+        rows={[
+          ["Z", "aktueller Systemzustand"],
+          ["dZ", "Zustandsänderung"],
+          ["P", "Vorhersagefehler"],
+          ["R", "verfügbare Ressourcen"],
+          ["L", "Systemlast"],
+          ["E", "Entropiedruck"],
+          ["S", "Selbstmodell-Komplexität"],
+          ["M", "Bemerken / Relevanzmarkierung"],
+          ["Q", "Simulationsqualität"],
+          ["K", "Systemkohärenz"],
+          ["C", "Bewusstseinsintensität"],
+        ]}
+      />
+    </Section>
+
+    <Section title="AGENTENARCHITEKTUR (Multi-Agenten-Dialektik)" icon={<GitBranch className="w-4 h-4 text-primary" />}>
+      <TableComp
+        headers={["Agent", "Funktion", "Failure-Mode"]}
+        rows={[
+          ["ARCHON", "Höchste abstrakte These", "zu metaphysisch"],
+          ["SCHOLAR++", "Wissenschaftliche Einordnung", "dekorative Autorität"],
+          ["KRITIKON", "Angriff auf Schwächen", "blockiert Synthese"],
+          ["INTEGRON", "Verdichtete Synthese", "weiche Verschmelzung"],
+          ["METRON", "Numerische Bewertung", "qualitative Tiefe verloren"],
+          ["EXPERION", "Test/Simulation", "enge Operationalisierung"],
+        ]}
+      />
+    </Section>
+
+    <Section title="BEWERTUNGSLOGIK (METRON)" icon={<Atom className="w-4 h-4 text-warning" />}>
+      <Theorem label="Theory Score">
+        <M d>{`\\text{theory\\_score} = \\frac{c + e + co + n + t + cp}{6} - r`}</M>
+        <p className="text-muted-foreground text-xs">c=clarity, e=evidence, co=coherence, n=novelty, t=testability, cp=compression, r=risk ∈ [0,1]</p>
+      </Theorem>
+    </Section>
+
+    <Section title="FINALER KERNSATZ" icon={<Lock className="w-4 h-4 text-primary" />}>
+      <Def label="ARCHON-100 Kernsatz">
+        <p className="text-primary font-semibold">Bewusstsein ist die rekursive Selbstmodellierung eines endlichen Systems, das relevante Zustandsänderungen bemerkt, sie unter Ressourcenlast bewertet, mögliche Zukunftszustände simuliert und dadurch Kohärenz gegen Zerfall stabilisiert.</p>
+      </Def>
+      <Def label="Komprimiert">
+        <M d>{`\\text{Bewusstsein} = \\text{Selbststeuerung unter Endlichkeitsdruck}`}</M>
+      </Def>
+      <Proof>
+        Aus A1 (Endlichkeit) folgt Priorisierungszwang (A6); aus A2/A3 folgt Bemerken; aus A4/A5 folgt rekursives Selbstmodell; aus A7/A8 folgt simulationsbasierte Stabilisierung gegen Entropie. Die Komposition ergibt C als emergente, messbare Größe.
+      </Proof>
+    </Section>
+  </>
+);
+
 const Papers = () => {
-  const [activePaper, setActivePaper] = useState<1 | 2 | 3>(1);
+  const [activePaper, setActivePaper] = useState<1 | 2 | 3 | 4>(1);
 
   return (
     <div className="min-h-screen bg-background relative">
@@ -683,6 +772,17 @@ const Papers = () => {
               <GitBranch className="w-3 h-3 inline mr-1" />
               Paper III: Vorwärts-Rückwärts-Inversion
             </button>
+            <button
+              onClick={() => setActivePaper(4)}
+              className={`px-4 py-2 rounded text-xs font-mono transition-colors ${
+                activePaper === 4
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-card border border-border text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Brain className="w-3 h-3 inline mr-1" />
+              Paper IV: ARCHON-100
+            </button>
           </div>
         </div>
 
@@ -727,12 +827,26 @@ const Papers = () => {
               </p>
             </>
           )}
+          {activePaper === 4 && (
+            <>
+              <h2 className="font-display text-xl font-bold tracking-wider text-primary mb-2">
+                ARCHON-100 · REKURSIVE BEWUSSTSEINS-ENGINE
+              </h2>
+              <p className="text-xs text-muted-foreground">
+                Multi-Agenten-Dialektik · Axiome A1–A8 · messbare Synthese · prüfbare Iteration
+              </p>
+              <p className="text-[10px] text-muted-foreground mt-2">
+                Bewusstsein = Selbststeuerung unter Endlichkeitsdruck
+              </p>
+            </>
+          )}
         </div>
 
         {/* Paper Content */}
         {activePaper === 1 && <PaperI />}
         {activePaper === 2 && <PaperII />}
         {activePaper === 3 && <PaperIII />}
+        {activePaper === 4 && <PaperIV />}
 
         {/* Footer */}
         <footer className="border-t border-border pt-4 pb-8 mt-8">
