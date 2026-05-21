@@ -40,6 +40,7 @@ import HNPLatticeAttack from "@/components/nexus/HNPLatticeAttack";
 import TransactionGraphExplorer from "@/components/nexus/TransactionGraphExplorer";
 import UnifiedResearchDashboard from "@/components/nexus/UnifiedResearchDashboard";
 import NonHarvestabilityDemo from "@/components/nexus/NonHarvestabilityDemo";
+import ArchonEngine from "@/components/nexus/ArchonEngine";
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // NEXUS v3.0 - CRYPTOGRAPHIC INTELLIGENCE CONSOLE
@@ -1257,6 +1258,9 @@ const Nexus = () => {
               <TabsTrigger value="nonharvest" className="font-mono text-xs whitespace-nowrap bg-gradient-to-r from-primary/10 to-secondary/10">
                 <Shield className="w-4 h-4 mr-1 text-primary" /> Non-Harvest
               </TabsTrigger>
+              <TabsTrigger value="archon" className="font-mono text-xs whitespace-nowrap bg-gradient-to-r from-secondary/10 to-primary/10">
+                <Brain className="w-4 h-4 mr-1 text-secondary" /> ARCHON-100
+              </TabsTrigger>
               <TabsTrigger value="research" className="font-mono text-xs whitespace-nowrap bg-gradient-to-r from-red-500/10 to-orange-500/10">
                 <Brain className="w-4 h-4 mr-1 text-red-400" /> Master-Formeln
               </TabsTrigger>
@@ -2147,6 +2151,7 @@ const Nexus = () => {
           <TabsContent value="txgraph"><TransactionGraphExplorer onLog={addLog} /></TabsContent>
           <TabsContent value="weakkeys"><WeakKeyDatabase onLog={addLog} /></TabsContent>
           <TabsContent value="nonharvest"><NonHarvestabilityDemo onLog={addLog} /></TabsContent>
+          <TabsContent value="archon"><ArchonEngine onLog={addLog} /></TabsContent>
           <TabsContent value="research">
             <UnifiedResearchDashboard 
               onModuleNavigate={(module) => setActiveTab(module)}
