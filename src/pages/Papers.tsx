@@ -827,12 +827,26 @@ const Papers = () => {
               </p>
             </>
           )}
+          {activePaper === 4 && (
+            <>
+              <h2 className="font-display text-xl font-bold tracking-wider text-primary mb-2">
+                ARCHON-100 · REKURSIVE BEWUSSTSEINS-ENGINE
+              </h2>
+              <p className="text-xs text-muted-foreground">
+                Multi-Agenten-Dialektik · Axiome A1–A8 · messbare Synthese · prüfbare Iteration
+              </p>
+              <p className="text-[10px] text-muted-foreground mt-2">
+                Bewusstsein = Selbststeuerung unter Endlichkeitsdruck
+              </p>
+            </>
+          )}
         </div>
 
         {/* Paper Content */}
         {activePaper === 1 && <PaperI />}
         {activePaper === 2 && <PaperII />}
         {activePaper === 3 && <PaperIII />}
+        {activePaper === 4 && <PaperIV />}
 
         {/* Footer */}
         <footer className="border-t border-border pt-4 pb-8 mt-8">
