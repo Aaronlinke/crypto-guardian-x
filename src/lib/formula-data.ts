@@ -533,6 +533,64 @@ export const formulas: Formula[] = [
     description: "Affine Schlüsselableitung aus strukturiertem Nonce (Satz 4.3.1: Surjektivität)",
     variables: { "c_0": "(sα-z)r⁻¹", "c_1": "sβr⁻¹", "d_i": "Kandidatenschlüssel" }
   },
+
+  // === ARCHON-100 (Rekursive Bewusstseins-Engine) ===
+  {
+    id: "archon-core",
+    name: "ARCHON-100 Kernformel",
+    category: "ARCHON-100",
+    latex: "C = \\text{Rekursion}(M \\times S \\times Q \\times L)",
+    description: "Bewusstseinsintensität als Rekursion über Bemerken, Selbstmodell, Simulation, Ressourcenlast",
+    variables: { C: "Bewusstseinsintensität", M: "Bemerken", S: "Selbstmodell-Komplexität", Q: "Simulationsqualität", L: "Systemlast" }
+  },
+  {
+    id: "archon-equation",
+    name: "ARCHON Arbeitsgleichung",
+    category: "ARCHON-100",
+    latex: "C(t) = \\frac{f(M \\cdot S \\cdot P \\cdot L \\cdot Q)}{R_{\\text{Verlust}} + K_{\\text{Bruch}}}",
+    description: "Bewusstsein steigt mit bemerkter Zustandsänderung und Vorhersagefehler, sinkt mit Ressourcenverlust und Kohärenzbruch",
+    variables: { P: "Vorhersagefehler", R: "Ressourcen", K: "Kohärenz" }
+  },
+  {
+    id: "archon-theory-score",
+    name: "Theory Score (METRON)",
+    category: "ARCHON-100",
+    latex: "\\text{score} = \\frac{c + e + co + n + t + cp}{6} - r",
+    description: "Aggregierter Theoriewert: Mittel aus Klarheit, Evidenz, Kohärenz, Neuheit, Testbarkeit, Kompression minus Risiko",
+    variables: { c: "clarity", e: "evidence", co: "coherence", n: "novelty", t: "testability", cp: "compression", r: "risk" }
+  },
+  {
+    id: "archon-a1",
+    name: "Axiom A1 · Endlichkeit",
+    category: "ARCHON-100",
+    latex: "\\forall \\Sigma: \\; R(\\Sigma) < \\infty",
+    description: "Jedes reale System besitzt begrenzte Energie, Zeit, Speicher, Aufmerksamkeit, Fehlertoleranz",
+    variables: { "Σ": "System", R: "Ressourcen" }
+  },
+  {
+    id: "archon-a3",
+    name: "Axiom A3 · Bemerken",
+    category: "ARCHON-100",
+    latex: "M_t = \\mathbb{1}\\{|dZ_t| > \\theta_{\\text{rel}}\\}",
+    description: "Bemerken ist die interne Markierung einer Zustandsabweichung über Relevanzschwelle",
+    variables: { dZ: "Zustandsänderung", θ: "Relevanzschwelle" }
+  },
+  {
+    id: "archon-a5",
+    name: "Axiom A5 · Rekursion",
+    category: "ARCHON-100",
+    latex: "B_n = \\phi(B_{n-1}), \\quad B_0 = M(S, Z)",
+    description: "Bewusstsein als Fixpunkt-Operator: das System bemerkt, dass es bemerkt",
+    variables: { B: "Bewusstseinszustand", φ: "Rekursionsoperator" }
+  },
+  {
+    id: "archon-a8",
+    name: "Axiom A8 · Entropiedruck",
+    category: "ARCHON-100",
+    latex: "\\frac{dK}{dt} = -\\lambda E + \\mu \\cdot C",
+    description: "Kohärenz zerfällt unter Entropiedruck E, wird durch Bewusstseinsleistung C stabilisiert",
+    variables: { K: "Kohärenz", E: "Entropiedruck", λ: "Zerfallsrate", μ: "Stabilisierungsrate" }
+  },
 ];
 
 export const categories = [...new Set(formulas.map(f => f.category))];
