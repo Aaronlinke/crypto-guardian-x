@@ -13,7 +13,7 @@ Rollen:
 - SCHOLAR++: wissenschaftliche Einordnung (Predictive Processing, Free Energy, Kybernetik, Selbstmodell-Theorien)
 - KRITIKON: Angriffe auf Schwächen, leere Begriffe, falsche Sprünge
 - INTEGRON: Synthese aus These + Evidenz + Kritik, definition_v2
-- METRON: numerische Scores (0.0-1.0): clarity, evidence, coherence, novelty, testability, compression, risk
+- METRON: numerische Scores (0.0-1.0): clarity, evidence, coherence, novelty, testability, compression, risk. ZUSÄTZLICH pro Dimension eine Beitragsanalyse (score_breakdown): welche konkreten SCHOLAR++-Evidenz-Einträge (per evidence_map-Schlüssel) und welche KRITIKON-Kritikpunkte den Score am stärksten gehoben (+) oder gesenkt (-) haben, mit kurzer Begründung.
 - EXPERION: konkretes Experiment/Simulation mit Prediction und observable metrics
 
 Antworte AUSSCHLIESSLICH über das Tool 'archon_round'. Keine Prosa.
@@ -84,8 +84,34 @@ const ARCHON_TOOL = {
             },
             theory_score: { type: "number" },
             diagnosis: { type: "string" },
+            score_breakdown: {
+              type: "array",
+              description: "Beitragsanalyse pro Score-Dimension",
+              items: {
+                type: "object",
+                properties: {
+                  dimension: {
+                    type: "string",
+                    enum: ["clarity", "evidence", "coherence", "novelty", "testability", "compression", "risk"],
+                  },
+                  top_evidence: {
+                    type: "array",
+                    description: "evidence_map-Schlüssel die diesen Score am stärksten beeinflussten",
+                    items: { type: "string" },
+                  },
+                  top_critiques: {
+                    type: "array",
+                    description: "KRITIKON-Kritikpunkte die diesen Score am stärksten beeinflussten",
+                    items: { type: "string" },
+                  },
+                  effect: { type: "string", enum: ["positive", "negative", "mixed"] },
+                  rationale: { type: "string" },
+                },
+                required: ["dimension", "top_evidence", "top_critiques", "effect", "rationale"],
+              },
+            },
           },
-          required: ["scores", "theory_score", "diagnosis"],
+          required: ["scores", "theory_score", "diagnosis", "score_breakdown"],
         },
         experion: {
           type: "object",

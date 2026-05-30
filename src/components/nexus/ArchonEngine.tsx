@@ -17,6 +17,13 @@ interface ArchonRound {
     scores: { clarity: number; evidence: number; coherence: number; novelty: number; testability: number; compression: number; risk: number };
     theory_score: number;
     diagnosis: string;
+    score_breakdown?: Array<{
+      dimension: string;
+      top_evidence: string[];
+      top_critiques: string[];
+      effect: "positive" | "negative" | "mixed";
+      rationale: string;
+    }>;
   };
   experion: { test_proposal: string; prediction: string; observable_metrics: string[] };
 }
@@ -178,6 +185,41 @@ export default function ArchonEngine({ onLog }: Props) {
                           <span className="w-10 font-mono text-right">{v.toFixed(2)}</span>
                         </div>
                       ))}
+                      {Array.isArray(block.score_breakdown) && block.score_breakdown.length > 0 && (
+                        <div className="mt-2 space-y-1.5 border-t border-border/40 pt-2">
+                          <div className="text-[10px] font-mono text-warning">Beitragsanalyse</div>
+                          {block.score_breakdown.map((b: ArchonRound["metron"]["score_breakdown"][number], i: number) => (
+                            <div key={i} className="border-l-2 border-warning/40 pl-2 py-0.5 space-y-0.5">
+                              <div className="flex items-center gap-1.5 text-[10px] font-mono">
+                                <span className="text-warning">{b.dimension}</span>
+                                <Badge
+                                  variant="outline"
+                                  className={`text-[9px] px-1 py-0 ${
+                                    b.effect === "positive"
+                                      ? "text-primary border-primary/40"
+                                      : b.effect === "negative"
+                                        ? "text-destructive border-destructive/40"
+                                        : "text-muted-foreground"
+                                  }`}
+                                >
+                                  {b.effect === "positive" ? "↑" : b.effect === "negative" ? "↓" : "±"} {b.effect}
+                                </Badge>
+                              </div>
+                              {b.top_evidence.length > 0 && (
+                                <p className="text-[9px] text-secondary">
+                                  Evidenz: {b.top_evidence.join(", ")}
+                                </p>
+                              )}
+                              {b.top_critiques.length > 0 && (
+                                <p className="text-[9px] text-destructive/80">
+                                  Kritik: {b.top_critiques.join(" · ")}
+                                </p>
+                              )}
+                              <p className="text-[9px] text-muted-foreground italic">{b.rationale}</p>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   )}
                   {key === "experion" && (
