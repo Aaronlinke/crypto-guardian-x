@@ -17,6 +17,13 @@ interface ArchonRound {
     scores: { clarity: number; evidence: number; coherence: number; novelty: number; testability: number; compression: number; risk: number };
     theory_score: number;
     diagnosis: string;
+    score_breakdown?: Array<{
+      dimension: string;
+      top_evidence: string[];
+      top_critiques: string[];
+      effect: "positive" | "negative" | "mixed";
+      rationale: string;
+    }>;
   };
   experion: { test_proposal: string; prediction: string; observable_metrics: string[] };
 }
