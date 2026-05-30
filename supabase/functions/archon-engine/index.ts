@@ -84,8 +84,34 @@ const ARCHON_TOOL = {
             },
             theory_score: { type: "number" },
             diagnosis: { type: "string" },
+            score_breakdown: {
+              type: "array",
+              description: "Beitragsanalyse pro Score-Dimension",
+              items: {
+                type: "object",
+                properties: {
+                  dimension: {
+                    type: "string",
+                    enum: ["clarity", "evidence", "coherence", "novelty", "testability", "compression", "risk"],
+                  },
+                  top_evidence: {
+                    type: "array",
+                    description: "evidence_map-Schlüssel die diesen Score am stärksten beeinflussten",
+                    items: { type: "string" },
+                  },
+                  top_critiques: {
+                    type: "array",
+                    description: "KRITIKON-Kritikpunkte die diesen Score am stärksten beeinflussten",
+                    items: { type: "string" },
+                  },
+                  effect: { type: "string", enum: ["positive", "negative", "mixed"] },
+                  rationale: { type: "string" },
+                },
+                required: ["dimension", "top_evidence", "top_critiques", "effect", "rationale"],
+              },
+            },
           },
-          required: ["scores", "theory_score", "diagnosis"],
+          required: ["scores", "theory_score", "diagnosis", "score_breakdown"],
         },
         experion: {
           type: "object",
