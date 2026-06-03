@@ -1220,6 +1220,9 @@ const Nexus = () => {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <div className="w-full overflow-x-auto pb-2">
             <TabsList className="inline-flex w-max gap-1">
+              <TabsTrigger value="suite" className="font-mono text-xs whitespace-nowrap bg-gradient-to-r from-primary/15 to-secondary/15">
+                <Layers className="w-4 h-4 mr-1 text-primary" /> Suite
+              </TabsTrigger>
               <TabsTrigger value="scanner" className="font-mono text-xs whitespace-nowrap">
                 <Scan className="w-4 h-4 mr-1" /> Scanner
               </TabsTrigger>
