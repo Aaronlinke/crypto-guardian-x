@@ -41,6 +41,7 @@ import TransactionGraphExplorer from "@/components/nexus/TransactionGraphExplore
 import UnifiedResearchDashboard from "@/components/nexus/UnifiedResearchDashboard";
 import NonHarvestabilityDemo from "@/components/nexus/NonHarvestabilityDemo";
 import ArchonEngine from "@/components/nexus/ArchonEngine";
+import NexusSuite from "@/components/nexus/NexusSuite";
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // NEXUS v3.0 - CRYPTOGRAPHIC INTELLIGENCE CONSOLE
