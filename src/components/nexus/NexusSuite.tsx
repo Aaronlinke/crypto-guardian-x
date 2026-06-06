@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -40,6 +41,26 @@ const MODULES = [
 ] as const;
 
 export default function NexusSuite({ onLog }: Props) {
+  const [openItems, setOpenItems] = useState<string[]>([]);
+
+  useEffect(() => {
+    const applyHash = () => {
+      const raw = window.location.hash.replace('#', '');
+      if (raw.startsWith('suite-')) {
+        const moduleId = raw.replace('suite-', '');
+        if (MODULES.some((m) => m.id === moduleId)) {
+          setOpenItems((prev) =>
+            prev.includes(moduleId) ? prev : [...prev, moduleId]
+          );
+        }
+      }
+    };
+
+    applyHash();
+    window.addEventListener('hashchange', applyHash);
+    return () => window.removeEventListener('hashchange', applyHash);
+  }, []);
+
   return (
     <div className="space-y-4">
       <Card className="border-primary/30 bg-card/80 backdrop-blur-sm">
@@ -59,7 +80,12 @@ export default function NexusSuite({ onLog }: Props) {
         </CardContent>
       </Card>
 
-      <Accordion type="multiple" className="space-y-2">
+      <Accordion
+        type="multiple"
+        value={openItems}
+        onValueChange={setOpenItems}
+        className="space-y-2"
+      >
         {MODULES.map(({ id, title, icon: Icon, Comp, desc }) => (
           <AccordionItem
             key={id}
