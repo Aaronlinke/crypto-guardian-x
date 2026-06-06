@@ -581,11 +581,35 @@ interface EntropySource {
   source: string;
 }
 
+const VALID_TABS = [
+  'scanner', 'history', 'suite', 'pollard', 'bsgs', 'hnp', 'mt',
+  'timing', 'script', 'txgraph', 'weakkeys', 'nonharvest',
+  'archon', 'research'
+];
+
 const Nexus = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('scanner');
-  
+
+  // Deep-link handling via URL hash
+  useEffect(() => {
+    const applyHash = () => {
+      const raw = window.location.hash.replace('#', '');
+      if (!raw) return;
+
+      if (raw.startsWith('suite-')) {
+        setActiveTab('suite');
+      } else if (VALID_TABS.includes(raw)) {
+        setActiveTab(raw);
+      }
+    };
+
+    applyHash();
+    window.addEventListener('hashchange', applyHash);
+    return () => window.removeEventListener('hashchange', applyHash);
+  }, []);
+
   // Attack Surface State
   const [nodes, setNodes] = useState<AttackNode[]>(ATTACK_SURFACE);
   const [isSimulating, setIsSimulating] = useState(false);
