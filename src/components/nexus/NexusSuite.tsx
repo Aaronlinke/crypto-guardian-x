@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/accordion";
 import {
   Layers, Zap, Table, Grid3X3, Shuffle, Clock, Code,
-  GitBranch, Database, Shield, Brain,
+  GitBranch, Database, Shield, Brain, KeyRound,
 } from "lucide-react";
 
 import PollardsRhoVisualizer from "@/components/nexus/PollardsRhoVisualizer";
@@ -22,6 +22,7 @@ import HNPLatticeAttack from "@/components/nexus/HNPLatticeAttack";
 import TransactionGraphExplorer from "@/components/nexus/TransactionGraphExplorer";
 import NonHarvestabilityDemo from "@/components/nexus/NonHarvestabilityDemo";
 import ArchonEngine from "@/components/nexus/ArchonEngine";
+import BrainWalletGenerator from "@/components/nexus/BrainWalletGenerator";
 
 interface Props {
   onLog?: (message: string) => void;
@@ -37,6 +38,7 @@ const MODULES = [
   { id: "txgraph", title: "Transaction Graph", icon: GitBranch, Comp: TransactionGraphExplorer, desc: "Fund-Flow" },
   { id: "weakkeys", title: "Weak Key Database", icon: Database, Comp: WeakKeyDatabase, desc: "Vulnerable Keys" },
   { id: "nonharvest", title: "Non-Harvestability", icon: Shield, Comp: NonHarvestabilityDemo, desc: "Demonstration" },
+  { id: "brainwallet", title: "Brain-Wallet Generator", icon: KeyRound, Comp: BrainWalletGenerator, desc: "Passphrase → Adresse + Guthabenprüfer" },
   { id: "archon", title: "ARCHON-100", icon: Brain, Comp: ArchonEngine, desc: "Bewusstseins-Engine" },
 ] as const;
 
