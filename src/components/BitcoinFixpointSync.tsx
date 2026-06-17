@@ -232,7 +232,7 @@ export function BitcoinFixpointSync() {
         {/* SRIL-Eingaben */}
         <div className="grid grid-cols-3 gap-2">
           <div>
-            <label className="text-[9px] text-muted-foreground">H(t)</label>
+            <label className="text-[9px] text-amber-400">H(t) · Phase</label>
             <Input
               value={H}
               onChange={(e) => setH(e.target.value)}
@@ -240,7 +240,7 @@ export function BitcoinFixpointSync() {
             />
           </div>
           <div>
-            <label className="text-[9px] text-primary font-bold">N(t) ⬅</label>
+            <label className="text-[9px] text-primary font-bold">N(t) · Norm ⬅</label>
             <Input
               value={N}
               onChange={(e) => setN(e.target.value)}
@@ -248,13 +248,16 @@ export function BitcoinFixpointSync() {
             />
           </div>
           <div>
-            <label className="text-[9px] text-muted-foreground">G(t)</label>
+            <label className="text-[9px] text-secondary">G(t) · Drift</label>
             <Input
               value={G}
               onChange={(e) => setG(e.target.value)}
               className="h-7 text-xs font-mono"
             />
           </div>
+        </div>
+        <div className="text-[9px] text-muted-foreground -mt-2">
+          Nur <span className="text-primary font-mono">N(t)</span> geht direkt in den Fixpunkt ein · H und G steuern die T+3-Entwicklung.
         </div>
 
         {/* Berechneter Wert */}
