@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { Bitcoin, RefreshCw, CheckCircle2, XCircle, Link2, Calculator, Zap } from "lucide-react";
+import { Bitcoin, RefreshCw, CheckCircle2, XCircle, Link2, Calculator, Zap, Info, ChevronDown } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
