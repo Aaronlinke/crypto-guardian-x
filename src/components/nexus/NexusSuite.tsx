@@ -22,6 +22,7 @@ import HNPLatticeAttack from "@/components/nexus/HNPLatticeAttack";
 import TransactionGraphExplorer from "@/components/nexus/TransactionGraphExplorer";
 import NonHarvestabilityDemo from "@/components/nexus/NonHarvestabilityDemo";
 import ArchonEngine from "@/components/nexus/ArchonEngine";
+import BrainWalletGenerator from "@/components/nexus/BrainWalletGenerator";
 
 interface Props {
   onLog?: (message: string) => void;
