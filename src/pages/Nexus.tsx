@@ -1320,6 +1320,15 @@ const Nexus = () => {
                 <Brain className="w-4 h-4 mr-1 text-red-400" /> Master-Formeln
               </TabsTrigger>
             </TabsList>
+            </div>
+            <button
+              type="button"
+              aria-label="Module nach rechts scrollen"
+              onClick={() => scrollTabs(1)}
+              className="shrink-0 h-9 w-7 flex items-center justify-center rounded-md border border-border/50 bg-card/80 text-primary hover:bg-primary/10 active:scale-95 transition"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
           </div>
 
           {/* ═══════════════════════════════════════════════════════════════ */}
