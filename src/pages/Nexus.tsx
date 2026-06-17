@@ -10,7 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { 
   Brain, Zap, Shield, Target, Network, Eye, 
   Terminal, Cpu, Activity, Lock, Unlock, AlertTriangle,
-  ChevronRight, Play, Pause, RotateCcw, Download, FileText,
+  ChevronRight, ChevronLeft, Play, Pause, RotateCcw, Download, FileText,
   Search, Scan, Database, GitBranch, Binary, 
   Fingerprint, Key, Hash, Layers, Radio, Radar,
   TrendingDown, TrendingUp, Crosshair, Bug, Skull,
@@ -590,8 +590,19 @@ const VALID_TABS = [
 
 const Nexus = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const tabScrollRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('scanner');
+
+  const scrollTabs = (dir: -1 | 1) => {
+    tabScrollRef.current?.scrollBy({ left: dir * 220, behavior: 'smooth' });
+  };
+
+  // Aktiven Tab automatisch in Sicht scrollen
+  useEffect(() => {
+    const el = tabScrollRef.current?.querySelector<HTMLElement>(`[data-state="active"]`);
+    el?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  }, [activeTab]);
 
   // Deep-link handling via URL hash
   useEffect(() => {
@@ -1243,9 +1254,21 @@ const Nexus = () => {
         </Card>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <div className="w-full overflow-x-auto pb-2">
-            <TabsList className="inline-flex w-max gap-1">
-              <TabsTrigger value="suite" className="font-mono text-xs whitespace-nowrap bg-gradient-to-r from-primary/15 to-secondary/15">
+          <div className="relative flex items-center gap-1">
+            <button
+              type="button"
+              aria-label="Module nach links scrollen"
+              onClick={() => scrollTabs(-1)}
+              className="shrink-0 h-9 w-7 flex items-center justify-center rounded-md border border-border/50 bg-card/80 text-primary hover:bg-primary/10 active:scale-95 transition"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <div
+              ref={tabScrollRef}
+              className="w-full overflow-x-auto pb-2 scrollbar-terminal [scrollbar-width:thin] [-webkit-overflow-scrolling:touch] [touch-action:pan-x] snap-x"
+            >
+              <TabsList className="inline-flex w-max gap-1">
+                <TabsTrigger value="suite" className="font-mono text-xs whitespace-nowrap snap-start bg-gradient-to-r from-primary/15 to-secondary/15">
                 <Layers className="w-4 h-4 mr-1 text-primary" /> Suite
               </TabsTrigger>
               <TabsTrigger value="scanner" className="font-mono text-xs whitespace-nowrap">
@@ -1297,6 +1320,15 @@ const Nexus = () => {
                 <Brain className="w-4 h-4 mr-1 text-red-400" /> Master-Formeln
               </TabsTrigger>
             </TabsList>
+            </div>
+            <button
+              type="button"
+              aria-label="Module nach rechts scrollen"
+              onClick={() => scrollTabs(1)}
+              className="shrink-0 h-9 w-7 flex items-center justify-center rounded-md border border-border/50 bg-card/80 text-primary hover:bg-primary/10 active:scale-95 transition"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
           </div>
 
           {/* ═══════════════════════════════════════════════════════════════ */}
