@@ -39,6 +39,7 @@ export function BitcoinFixpointSync() {
   const [targetAddress, setTargetAddress] = useState("bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh");
   const [validationResults, setValidationResults] = useState<ValidationResult[]>([]);
   const [isValidating, setIsValidating] = useState(false);
+  const [showExplain, setShowExplain] = useState(false);
   
   const { data, loading, error, fetchAddressData, reset } = useBlockstreamAPI();
   const { toast } = useToast();
