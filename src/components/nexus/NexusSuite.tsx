@@ -38,6 +38,7 @@ const MODULES = [
   { id: "txgraph", title: "Transaction Graph", icon: GitBranch, Comp: TransactionGraphExplorer, desc: "Fund-Flow" },
   { id: "weakkeys", title: "Weak Key Database", icon: Database, Comp: WeakKeyDatabase, desc: "Vulnerable Keys" },
   { id: "nonharvest", title: "Non-Harvestability", icon: Shield, Comp: NonHarvestabilityDemo, desc: "Demonstration" },
+  { id: "brainwallet", title: "Brain-Wallet Generator", icon: KeyRound, Comp: BrainWalletGenerator, desc: "Passphrase → Adresse + Guthabenprüfer" },
   { id: "archon", title: "ARCHON-100", icon: Brain, Comp: ArchonEngine, desc: "Bewusstseins-Engine" },
 ] as const;
 
