@@ -1287,6 +1287,9 @@ const Nexus = () => {
               <TabsTrigger value="nonharvest" className="font-mono text-xs whitespace-nowrap bg-gradient-to-r from-primary/10 to-secondary/10">
                 <Shield className="w-4 h-4 mr-1 text-primary" /> Non-Harvest
               </TabsTrigger>
+              <TabsTrigger value="brainwallet" className="font-mono text-xs whitespace-nowrap bg-gradient-to-r from-destructive/10 to-secondary/10">
+                <Key className="w-4 h-4 mr-1 text-destructive" /> Brain-Wallet
+              </TabsTrigger>
               <TabsTrigger value="archon" className="font-mono text-xs whitespace-nowrap bg-gradient-to-r from-secondary/10 to-primary/10">
                 <Brain className="w-4 h-4 mr-1 text-secondary" /> ARCHON-100
               </TabsTrigger>
