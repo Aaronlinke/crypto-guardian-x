@@ -185,12 +185,49 @@ export function BitcoinFixpointSync() {
         <div className="p-3 rounded bg-amber-500/10 border border-amber-500/30">
           <div className="text-[10px] text-amber-400 mb-2">Resonanz-Formel (Maass-Formen n=2):</div>
           <div className="text-sm font-mono text-center text-amber-300">
-            N(t) / 2 = BTC-Fixpunkt
+            BTC-Fixpunkt = N(t) / 2
           </div>
           <div className="text-[9px] text-amber-400/70 text-center mt-1">
-            Abweichung ≤ 4% = DVL-Toleranzschwelle erfüllt
+            Abweichung |BTC − N/2| / (N/2) ≤ 4% ⇒ DVL-Toleranzschwelle erfüllt
           </div>
         </div>
+
+        {/* Erklärung (aufklappbar) */}
+        <button
+          type="button"
+          onClick={() => setShowExplain((v) => !v)}
+          className="w-full flex items-center gap-2 px-3 py-2 rounded bg-muted/20 border border-border/40 text-[11px] text-primary hover:bg-muted/30 transition"
+        >
+          <Info className="w-3.5 h-3.5" />
+          <span className="font-mono">Was berechnet dieses Modul?</span>
+          <ChevronDown className={`w-3.5 h-3.5 ml-auto transition-transform ${showExplain ? "rotate-180" : ""}`} />
+        </button>
+        {showExplain && (
+          <div className="p-3 rounded bg-muted/10 border border-border/40 space-y-2 text-[11px] text-muted-foreground leading-relaxed">
+            <p>
+              <span className="text-primary font-mono">1. SRIL-Zustand:</span> Das System wird durch drei
+              gekoppelte Größen beschrieben — <span className="text-amber-400 font-mono">H</span> (Harmonie /
+              Phase), <span className="text-primary font-mono">N</span> (Norm / Amplitude) und
+              <span className="text-secondary font-mono"> G</span> (Gradient / Drift). Sie entwickeln sich pro
+              Schritt über die Koeffizienten α, β, γ, δ, η weiter (Knopf <span className="font-mono">T+3</span> = 3 Iterationen).
+            </p>
+            <p>
+              <span className="text-primary font-mono">2. Fixpunkt-Projektion:</span> Die Maass-Formen-Theorie
+              (n=2) sagt, dass sich ein stabiler Resonanz-Wert als <span className="font-mono text-amber-300">N(t)/2</span>{" "}
+              ergibt. Dieser Wert wird als erwartete BTC-Menge interpretiert.
+            </p>
+            <p>
+              <span className="text-primary font-mono">3. Blockchain-Abgleich:</span> Über die Blockstream-API
+              werden die echten Output-Beträge der eingegebenen Adresse geladen. Für jeden Output berechnen wir
+              die relative Abweichung zum Fixpunkt. Liegt sie ≤ 4 % (DVL-Toleranz), gilt der Output als
+              <span className="text-green-400 font-mono"> Resonanz-Match</span>.
+            </p>
+            <p className="text-[10px] text-amber-400/70 italic">
+              Wissenschaftlich/edukativ: Dies demonstriert die SRIL-Resonanz-Hypothese gegen reale On-Chain-Daten —
+              es ist kein Schlüssel- oder Wiederherstellungs-Verfahren.
+            </p>
+          </div>
+        )}
 
         {/* SRIL-Eingaben */}
         <div className="grid grid-cols-3 gap-2">
