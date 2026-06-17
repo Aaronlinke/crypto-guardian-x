@@ -1254,9 +1254,21 @@ const Nexus = () => {
         </Card>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <div className="w-full overflow-x-auto pb-2">
-            <TabsList className="inline-flex w-max gap-1">
-              <TabsTrigger value="suite" className="font-mono text-xs whitespace-nowrap bg-gradient-to-r from-primary/15 to-secondary/15">
+          <div className="relative flex items-center gap-1">
+            <button
+              type="button"
+              aria-label="Module nach links scrollen"
+              onClick={() => scrollTabs(-1)}
+              className="shrink-0 h-9 w-7 flex items-center justify-center rounded-md border border-border/50 bg-card/80 text-primary hover:bg-primary/10 active:scale-95 transition"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <div
+              ref={tabScrollRef}
+              className="w-full overflow-x-auto pb-2 scrollbar-terminal [scrollbar-width:thin] [-webkit-overflow-scrolling:touch] [touch-action:pan-x] snap-x"
+            >
+              <TabsList className="inline-flex w-max gap-1">
+                <TabsTrigger value="suite" className="font-mono text-xs whitespace-nowrap snap-start bg-gradient-to-r from-primary/15 to-secondary/15">
                 <Layers className="w-4 h-4 mr-1 text-primary" /> Suite
               </TabsTrigger>
               <TabsTrigger value="scanner" className="font-mono text-xs whitespace-nowrap">
