@@ -10,7 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { 
   Brain, Zap, Shield, Target, Network, Eye, 
   Terminal, Cpu, Activity, Lock, Unlock, AlertTriangle,
-  ChevronRight, Play, Pause, RotateCcw, Download, FileText,
+  ChevronRight, ChevronLeft, Play, Pause, RotateCcw, Download, FileText,
   Search, Scan, Database, GitBranch, Binary, 
   Fingerprint, Key, Hash, Layers, Radio, Radar,
   TrendingDown, TrendingUp, Crosshair, Bug, Skull,
