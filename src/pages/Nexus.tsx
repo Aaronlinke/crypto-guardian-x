@@ -585,7 +585,7 @@ interface EntropySource {
 const VALID_TABS = [
   'scanner', 'history', 'suite', 'pollard', 'bsgs', 'hnp', 'mt',
   'timing', 'script', 'txgraph', 'weakkeys', 'nonharvest',
-  'archon', 'research'
+  'brainwallet', 'archon', 'research'
 ];
 
 const Nexus = () => {
