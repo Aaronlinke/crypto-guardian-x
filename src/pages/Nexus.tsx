@@ -590,8 +590,19 @@ const VALID_TABS = [
 
 const Nexus = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const tabScrollRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('scanner');
+
+  const scrollTabs = (dir: -1 | 1) => {
+    tabScrollRef.current?.scrollBy({ left: dir * 220, behavior: 'smooth' });
+  };
+
+  // Aktiven Tab automatisch in Sicht scrollen
+  useEffect(() => {
+    const el = tabScrollRef.current?.querySelector<HTMLElement>(`[data-state="active"]`);
+    el?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  }, [activeTab]);
 
   // Deep-link handling via URL hash
   useEffect(() => {
