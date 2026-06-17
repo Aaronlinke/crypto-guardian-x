@@ -42,6 +42,7 @@ import UnifiedResearchDashboard from "@/components/nexus/UnifiedResearchDashboar
 import NonHarvestabilityDemo from "@/components/nexus/NonHarvestabilityDemo";
 import ArchonEngine from "@/components/nexus/ArchonEngine";
 import NexusSuite from "@/components/nexus/NexusSuite";
+import BrainWalletGenerator from "@/components/nexus/BrainWalletGenerator";
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // NEXUS v3.0 - CRYPTOGRAPHIC INTELLIGENCE CONSOLE
