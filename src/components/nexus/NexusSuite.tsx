@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/accordion";
 import {
   Layers, Zap, Table, Grid3X3, Shuffle, Clock, Code,
-  GitBranch, Database, Shield, Brain,
+  GitBranch, Database, Shield, Brain, KeyRound,
 } from "lucide-react";
 
 import PollardsRhoVisualizer from "@/components/nexus/PollardsRhoVisualizer";
