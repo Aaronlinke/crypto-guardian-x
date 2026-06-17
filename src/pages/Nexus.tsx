@@ -2184,6 +2184,7 @@ const Nexus = () => {
           <TabsContent value="weakkeys"><WeakKeyDatabase onLog={addLog} /></TabsContent>
           <TabsContent value="nonharvest"><NonHarvestabilityDemo onLog={addLog} /></TabsContent>
           <TabsContent value="suite"><NexusSuite onLog={addLog} /></TabsContent>
+          <TabsContent value="brainwallet"><BrainWalletGenerator onLog={addLog} /></TabsContent>
           <TabsContent value="archon"><ArchonEngine onLog={addLog} /></TabsContent>
           <TabsContent value="research">
             <UnifiedResearchDashboard 
