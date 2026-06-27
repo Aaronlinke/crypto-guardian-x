@@ -11,6 +11,7 @@ import {
   generateRandomPhrase,
   type BrainWalletKey,
 } from "@/lib/brain-wallet";
+import { useScienceMode } from "@/contexts/ScienceModeContext";
 
 const BLOCKSTREAM_API = "https://blockstream.info/api";
 
