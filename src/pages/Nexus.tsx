@@ -584,7 +584,7 @@ interface EntropySource {
 }
 
 const VALID_TABS = [
-  'scanner', 'history', 'suite', 'pollard', 'bsgs', 'hnp', 'mt',
+  'science', 'scanner', 'history', 'suite', 'pollard', 'bsgs', 'hnp', 'mt',
   'timing', 'script', 'txgraph', 'weakkeys', 'nonharvest',
   'brainwallet', 'archon', 'research'
 ];
