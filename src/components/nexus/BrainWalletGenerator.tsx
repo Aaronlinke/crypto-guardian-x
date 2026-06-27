@@ -152,6 +152,14 @@ export default function BrainWalletGenerator({ onLog }: Props) {
             </p>
           </div>
 
+          <div className={`text-[10px] font-mono rounded-md border px-3 py-2 ${isScientist ? "border-secondary/40 bg-secondary/5 text-secondary" : "border-border/50 bg-muted/30 text-muted-foreground"}`}>
+            {isScientist
+              ? "Wissenschaftsmodus aktiv · Live-Guthabenprüfung freigeschaltet."
+              : "Öffentlicher Demo-Modus · Live-Guthabenprüfung deaktiviert (nur Ableitung). Im Wissenschaftsmodus freischaltbar."}
+          </div>
+
+
+
           {/* Controls */}
           <div className="flex flex-wrap items-end gap-3">
             <div className="space-y-1">
