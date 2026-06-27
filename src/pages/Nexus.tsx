@@ -14,7 +14,7 @@ import {
   Search, Scan, Database, GitBranch, Binary, 
   Fingerprint, Key, Hash, Layers, Radio, Radar,
   TrendingDown, TrendingUp, Crosshair, Bug, Skull,
-  Grid3X3, Table, Shuffle, Clock, Code
+  Grid3X3, Table, Shuffle, Clock, Code, FlaskConical
 } from "lucide-react";
 import { SECP256K1, modInverse, toFullHex, recoverPrivateKey, safeBigInt } from "@/lib/crypto-math";
 import { 
@@ -43,6 +43,7 @@ import NonHarvestabilityDemo from "@/components/nexus/NonHarvestabilityDemo";
 import ArchonEngine from "@/components/nexus/ArchonEngine";
 import NexusSuite from "@/components/nexus/NexusSuite";
 import BrainWalletGenerator from "@/components/nexus/BrainWalletGenerator";
+import ScienceModePanel from "@/components/nexus/ScienceModePanel";
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // NEXUS v3.0 - CRYPTOGRAPHIC INTELLIGENCE CONSOLE
@@ -583,7 +584,7 @@ interface EntropySource {
 }
 
 const VALID_TABS = [
-  'scanner', 'history', 'suite', 'pollard', 'bsgs', 'hnp', 'mt',
+  'science', 'scanner', 'history', 'suite', 'pollard', 'bsgs', 'hnp', 'mt',
   'timing', 'script', 'txgraph', 'weakkeys', 'nonharvest',
   'brainwallet', 'archon', 'research'
 ];
@@ -1268,6 +1269,9 @@ const Nexus = () => {
               className="w-full overflow-x-auto pb-2 scrollbar-terminal [scrollbar-width:thin] [-webkit-overflow-scrolling:touch] [touch-action:pan-x] snap-x"
             >
               <TabsList className="inline-flex w-max gap-1">
+                <TabsTrigger value="science" className="font-mono text-xs whitespace-nowrap snap-start bg-gradient-to-r from-secondary/20 to-primary/15">
+                <FlaskConical className="w-4 h-4 mr-1 text-secondary" /> Wissenschaft
+              </TabsTrigger>
                 <TabsTrigger value="suite" className="font-mono text-xs whitespace-nowrap snap-start bg-gradient-to-r from-primary/15 to-secondary/15">
                 <Layers className="w-4 h-4 mr-1 text-primary" /> Suite
               </TabsTrigger>
@@ -2215,6 +2219,7 @@ const Nexus = () => {
           <TabsContent value="txgraph"><TransactionGraphExplorer onLog={addLog} /></TabsContent>
           <TabsContent value="weakkeys"><WeakKeyDatabase onLog={addLog} /></TabsContent>
           <TabsContent value="nonharvest"><NonHarvestabilityDemo onLog={addLog} /></TabsContent>
+          <TabsContent value="science"><ScienceModePanel onLog={addLog} /></TabsContent>
           <TabsContent value="suite"><NexusSuite onLog={addLog} /></TabsContent>
           <TabsContent value="brainwallet"><BrainWalletGenerator onLog={addLog} /></TabsContent>
           <TabsContent value="archon"><ArchonEngine onLog={addLog} /></TabsContent>

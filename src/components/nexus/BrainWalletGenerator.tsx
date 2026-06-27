@@ -11,6 +11,7 @@ import {
   generateRandomPhrase,
   type BrainWalletKey,
 } from "@/lib/brain-wallet";
+import { useScienceMode } from "@/contexts/ScienceModeContext";
 
 const BLOCKSTREAM_API = "https://blockstream.info/api";
 
@@ -55,6 +56,7 @@ function sats(n: number): string {
 }
 
 export default function BrainWalletGenerator({ onLog }: Props) {
+  const { limits, isScientist } = useScienceMode();
   const [wordCount, setWordCount] = useState<1 | 2 | 3>(2);
   const [customPhrase, setCustomPhrase] = useState("");
   const [autoCheck, setAutoCheck] = useState(true);
@@ -64,6 +66,13 @@ export default function BrainWalletGenerator({ onLog }: Props) {
 
   const checkEntry = useCallback(
     async (key: BrainWalletKey): Promise<CheckedAddress[]> => {
+      if (!limits.liveData) {
+        onLog?.(`[BRAIN-WALLET] Live-Guthabenprüfung nur im Wissenschaftsmodus verfügbar.`);
+        return [
+          { address: key.uncompressedAddress, type: "uncompressed", funded: null, balance: null, txCount: null, error: "Nur im Wissenschaftsmodus" },
+          { address: key.compressedAddress, type: "compressed", funded: null, balance: null, txCount: null, error: "Nur im Wissenschaftsmodus" },
+        ];
+      }
       const targets: Array<{ address: string; type: "compressed" | "uncompressed" }> = [
         { address: key.uncompressedAddress, type: "uncompressed" },
         { address: key.compressedAddress, type: "compressed" },
@@ -79,7 +88,7 @@ export default function BrainWalletGenerator({ onLog }: Props) {
       }
       return results;
     },
-    [onLog]
+    [onLog, limits.liveData]
   );
 
   const handleGenerate = useCallback(
@@ -142,6 +151,14 @@ export default function BrainWalletGenerator({ onLog }: Props) {
               und niemals, um auf fremde Guthaben zuzugreifen.
             </p>
           </div>
+
+          <div className={`text-[10px] font-mono rounded-md border px-3 py-2 ${isScientist ? "border-secondary/40 bg-secondary/5 text-secondary" : "border-border/50 bg-muted/30 text-muted-foreground"}`}>
+            {isScientist
+              ? "Wissenschaftsmodus aktiv · Live-Guthabenprüfung freigeschaltet."
+              : "Öffentlicher Demo-Modus · Live-Guthabenprüfung deaktiviert (nur Ableitung). Im Wissenschaftsmodus freischaltbar."}
+          </div>
+
+
 
           {/* Controls */}
           <div className="flex flex-wrap items-end gap-3">
