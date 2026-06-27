@@ -56,6 +56,7 @@ function sats(n: number): string {
 }
 
 export default function BrainWalletGenerator({ onLog }: Props) {
+  const { limits, isScientist } = useScienceMode();
   const [wordCount, setWordCount] = useState<1 | 2 | 3>(2);
   const [customPhrase, setCustomPhrase] = useState("");
   const [autoCheck, setAutoCheck] = useState(true);
@@ -65,6 +66,13 @@ export default function BrainWalletGenerator({ onLog }: Props) {
 
   const checkEntry = useCallback(
     async (key: BrainWalletKey): Promise<CheckedAddress[]> => {
+      if (!limits.liveData) {
+        onLog?.(`[BRAIN-WALLET] Live-Guthabenprüfung nur im Wissenschaftsmodus verfügbar.`);
+        return [
+          { address: key.uncompressedAddress, type: "uncompressed", funded: null, balance: null, txCount: null, error: "Nur im Wissenschaftsmodus" },
+          { address: key.compressedAddress, type: "compressed", funded: null, balance: null, txCount: null, error: "Nur im Wissenschaftsmodus" },
+        ];
+      }
       const targets: Array<{ address: string; type: "compressed" | "uncompressed" }> = [
         { address: key.uncompressedAddress, type: "uncompressed" },
         { address: key.compressedAddress, type: "compressed" },
