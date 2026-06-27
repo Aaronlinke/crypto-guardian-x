@@ -88,7 +88,7 @@ export default function BrainWalletGenerator({ onLog }: Props) {
       }
       return results;
     },
-    [onLog]
+    [onLog, limits.liveData]
   );
 
   const handleGenerate = useCallback(
