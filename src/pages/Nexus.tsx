@@ -14,7 +14,7 @@ import {
   Search, Scan, Database, GitBranch, Binary, 
   Fingerprint, Key, Hash, Layers, Radio, Radar,
   TrendingDown, TrendingUp, Crosshair, Bug, Skull,
-  Grid3X3, Table, Shuffle, Clock, Code
+  Grid3X3, Table, Shuffle, Clock, Code, FlaskConical
 } from "lucide-react";
 import { SECP256K1, modInverse, toFullHex, recoverPrivateKey, safeBigInt } from "@/lib/crypto-math";
 import { 
