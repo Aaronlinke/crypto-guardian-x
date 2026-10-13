@@ -43,6 +43,7 @@ export default function ArchonEngine({ onLog }: Props) {
   const [topic, setTopic] = useState("Bewusstsein als rekursive Selbstmodellierung unter Endlichkeit");
   const [rounds, setRounds] = useState<ArchonRound[]>([]);
   const [loading, setLoading] = useState(false);
+  const [creditsExhausted, setCreditsExhausted] = useState(false);
   const { toast } = useToast();
 
   const runRound = async () => {
@@ -54,8 +55,31 @@ export default function ArchonEngine({ onLog }: Props) {
       const { data, error } = await supabase.functions.invoke("archon-engine", {
         body: { topic, previous },
       });
-      if (error) throw error;
-      if (data?.error) throw new Error(data.error);
+      if (error) {
+        // FunctionsHttpError: Antwort-Body auslesen, um 402/429 sauber zu erkennen
+        let bodyMsg = "";
+        try {
+          const ctx = (error as { context?: Response }).context;
+          if (ctx) {
+            const body = await ctx.json().catch(() => null);
+            bodyMsg = body?.error ?? "";
+            if (ctx.status === 402 || /credits/i.test(bodyMsg)) {
+              setCreditsExhausted(true);
+              onLog?.("[ARCHON-100] KI-Credits aufgebraucht – Runde übersprungen");
+              return;
+            }
+          }
+        } catch { /* Body nicht lesbar – unten generisch behandeln */ }
+        throw new Error(bodyMsg || error.message);
+      }
+      if (data?.error) {
+        if (/credits/i.test(data.error)) {
+          setCreditsExhausted(true);
+          onLog?.("[ARCHON-100] KI-Credits aufgebraucht – Runde übersprungen");
+          return;
+        }
+        throw new Error(data.error);
+      }
       const round: ArchonRound = data.round;
       setRounds((prev) => [...prev, round]);
       onLog?.(`[ARCHON-100] theory_score=${round.metron.theory_score.toFixed(2)}`);
