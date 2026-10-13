@@ -137,6 +137,16 @@ export default function ArchonEngine({ onLog }: Props) {
               <Download className="w-3 h-3" />
             </Button>
           </div>
+          {creditsExhausted && (
+            <div className="border border-warning/40 bg-warning/10 rounded-md p-3 text-[11px] font-mono space-y-1">
+              <div className="text-warning font-semibold">⚠ KI-Credits aufgebraucht</div>
+              <p className="text-muted-foreground">
+                Das KI-Kontingent des Workspaces ist erschöpft – ARCHON-100 kann keine neuen Runden erzeugen.
+                Bereits erzeugte Runden bleiben sichtbar. Credits lassen sich unter Settings → Plans &amp; credits aufladen;
+                alle anderen Module laufen lokal und funktionieren weiterhin.
+              </p>
+            </div>
+          )}
         </CardContent>
       </Card>
 
